@@ -285,7 +285,8 @@ def build_candidate_pools(queries: list[dict[str, Any]], corpus: list[dict[str, 
     vectors = retriever.encode_queries([row["query"] for row in queries])
     for query, vector in zip(queries, vectors, strict=True):
         source_ids = list(query["source_anchor_chunk_ids"])
-        bm25_ids = bm25.rank(query["query"], limit=3)
+        bm25_ranking = bm25.rank(query["query"], limit=30)
+        bm25_ids = bm25_ranking[:3]
         r1_rows = retriever.rank_variant("R1_raw", query["query"], 3, vector.reshape(1, -1))
         r1_ids = [str(row["chunk_id"]) for row in r1_rows]
         top_down = retriever.top_down_from_rankings(
@@ -319,6 +320,12 @@ def build_candidate_pools(queries: list[dict[str, Any]], corpus: list[dict[str, 
             chunk_id = str(row["chunk_id"])
             ordered.append(chunk_id)
             methods[chunk_id].add("same_document_hard_negative")
+        for chunk_id in bm25_ranking[3:]:
+            if len(ordered) >= 8:
+                break
+            if chunk_id not in ordered:
+                ordered.append(chunk_id)
+                methods[chunk_id].add("bm25_deduplication_backfill")
         ordered = ordered[:12]
         if len(ordered) < 8:
             raise ValueError(f"candidate pool too small for {query['query_id']}: {len(ordered)}")
