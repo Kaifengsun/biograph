@@ -1,0 +1,88 @@
+# Secrets and machine-local configuration
+.env
+.env.*
+!.env.example
+.pipeline_*
+bg_launch.ps1
+
+# Python and test caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# JavaScript dependencies
+node_modules/
+
+# Local databases, downloaded corpora, and generated indexes
+neo4j_docker_data/
+data/
+artifacts/
+output/
+outputs/
+simulation_results/
+*.faiss
+*.index
+
+# Raw or redistributed literature and binary review artifacts
+文献/
+references/
+*.pdf
+*.caj
+*.doc
+*.docx
+*.xls
+*.xlsx
+*.ppt
+*.pptx
+
+# Logs, archives, and process state
+*.log
+*.out
+*.err
+*.pid
+*.zip
+*.7z
+*.tar
+*.tar.gz
+
+# Local editor and agent state
+.vscode/
+.claude/
+.kiro/
+
+# Generated pipeline directories
+Neo_StandardExtracter/
+
+# Internal result exports that require a separate release review
+agent_sim_results.json
+docs/*.csv
+charts/ChatGPT Image*
+
+# Internal handoff notes, scratch utilities, and superseded simulation work
+CODEX_RULES.md
+HANDOFF*.md
+TA_Tutorial_Notes.md
+_*.py
+agent_sim/
+run_simulation.py
+tests/test_simulator_integrity.py
+charts/
+research_proposal_EN.md
+研究计划*.md
+实验方案单独补充说明.md
+检索方法2.txt
+切分错误.txt
+
+# Superseded manuscript fragments may contain exploratory or synthetic numbers
+sections/01_abstract.md
+sections/02_introduction.md
+sections/03_related_work.md
+sections/03b_problem_definition.md
+sections/04_methodology.md
+sections/05_experiments.md
+sections/06_conclusion.md
+sections/draft_chinese.md
+sections/draft_chinese_audit_*.md
+sections/孙凯枫论文初稿.md
