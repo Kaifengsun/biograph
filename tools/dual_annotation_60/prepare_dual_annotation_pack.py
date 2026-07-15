@@ -15,6 +15,7 @@ import os
 import random
 import re
 import subprocess
+import sys
 import urllib.error
 import urllib.request
 import time
@@ -23,11 +24,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from evaluate_bm25_enrichment_ablation import BM25Index, load_corpus
 from three_path_retrieval import ThreePathSnapshotRetriever, sha256_file
 
 
-ROOT = Path(__file__).resolve().parents[2]
 CORPUS = ROOT / "data/staging/enrichment_full_2026-07-deepseek-v4-pro-v4"
 INDEX_ROOT = ROOT / "artifacts/retrieval_ablation/deepseek-v4-pro-v4"
 GRAPH = ROOT / "artifacts/regulatory_evidence_graph/deepseek-v4-pro-v4-build5-regulatory-fda"
