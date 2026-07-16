@@ -1,5 +1,5 @@
 ---
-goal: Produce a verified English Overleaf manuscript with one locked post-hoc BGE reranker analysis
+goal: Produce a verified English Overleaf manuscript with one locked post-hoc Qwen3 reranker analysis
 version: 1.0
 date_created: 2026-07-16
 last_updated: 2026-07-16
@@ -19,7 +19,7 @@ confirmatory experiment.
 
 ## 1. Requirements & Constraints
 
-- **REQ-001**: Use `BAAI/bge-reranker-v2-m3` at one exact Hugging Face revision.
+- **REQ-001**: Use `Qwen/Qwen3-Reranker-0.6B` at one exact Hugging Face revision.
 - **REQ-002**: Rerank the context-matched BM25 top 50 and retain all 50 results.
 - **REQ-003**: Report Hit@1, Hit@3, Hit@5, Hit@50, MRR@50, and binary nDCG@5.
 - **REQ-004**: Build an English LaTeX manuscript with 25--35 verified references.
@@ -51,7 +51,7 @@ confirmatory experiment.
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
-| TASK-005 | Run BGE inference once with the locked manifest and checkpointed output. | | |
+| TASK-005 | Run Qwen3 reranker inference once with the locked manifest and checkpointed output. | | |
 | TASK-006 | Compute per-query, aggregate, bootstrap, paired, and slice results without changing locked settings. | | |
 | TASK-007 | Run `validate_results.py` and retain the complete top-50 rankings and runtime log. | | |
 
@@ -95,7 +95,7 @@ confirmatory experiment.
 ## 4. Dependencies
 
 - **DEP-001**: `D:\Anaconda3\python.exe` with PyTorch and Transformers.
-- **DEP-002**: Hugging Face model repository `BAAI/bge-reranker-v2-m3`.
+- **DEP-002**: Hugging Face model repository `Qwen/Qwen3-Reranker-0.6B`.
 - **DEP-003**: Frozen pack `data/eval/dual_annotation_58_formal_run_ready_2026-07-16.json`.
 - **DEP-004**: Frozen corpus `data/staging/enrichment_full_2026-07-deepseek-v4-pro-v4`.
 - **DEP-005**: Existing BM25 implementation in `source_chunk_reranker.py`.
@@ -119,7 +119,7 @@ confirmatory experiment.
 - **TEST-004**: Lock validation rejects any changed model, payload, corpus, qrels, candidate, or analysis hash.
 - **TEST-005**: Result validation rejects missing queries, missing metrics, duplicate candidates, and unreported valid outputs.
 - **TEST-006**: Citation validation rejects missing metadata sources, unsupported claims, duplicates, and preprint/publication mislabelling.
-- **TEST-007**: Manuscript validation rejects unqualified confirmatory or superiority language for the BGE result.
+- **TEST-007**: Manuscript validation rejects unqualified confirmatory or superiority language for the Qwen3 result.
 - **TEST-008**: Public-package scan rejects credential patterns, private workbook names, local paths, and source-passage fingerprints.
 - **TEST-009**: LaTeX compilation returns zero errors and zero undefined citation/reference warnings.
 
@@ -137,4 +137,4 @@ confirmatory experiment.
 - `docs/superpowers/specs/2026-07-16-english-latex-reranker-design.md`
 - `sections/draft_chinese_rewritten.md`
 - `data/eval/dual_annotation_58_formal_run_ready_2026-07-16.json`
-- https://huggingface.co/BAAI/bge-reranker-v2-m3
+- https://huggingface.co/Qwen/Qwen3-Reranker-0.6B

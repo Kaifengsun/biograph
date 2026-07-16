@@ -15,7 +15,7 @@ from huggingface_hub import HfApi, snapshot_download
 
 from tools.modern_reranker_58.common import (
     BOOTSTRAP_ITERATIONS, BOOTSTRAP_SEED, CANDIDATE_DEPTH, DEFAULT_CORPUS,
-    DEFAULT_PACK, MODEL_ID, MODEL_MAX_LENGTH, ROOT, corpus_manifest,
+    DEFAULT_PACK, MODEL_ID, MODEL_MAX_LENGTH, ROOT, TASK_INSTRUCTION, corpus_manifest,
     prepare_bm25_candidates, sha256_file, sha256_json, write_json,
 )
 
@@ -88,12 +88,14 @@ def main() -> None:
             "stored_ranking_depth": CANDIDATE_DEPTH,
             "presentation_depth": 5,
             "max_length": MODEL_MAX_LENGTH,
-            "truncation": "only_second",
-            "padding": "longest_in_batch",
+            "truncation": "longest_first_formatted_pair",
+            "padding": "left_longest_in_batch",
+            "task_instruction": TASK_INSTRUCTION,
+            "score": "normalized_yes_probability_against_no",
             "unicode_normalization": "NFC",
             "payload_fields": ["parents_context", "heading", "content"],
             "payload_max_chars": 2000,
-            "precision": "float16",
+            "precision": "bfloat16",
             "device": "cuda:0",
             "batch_size": args.batch_size,
             "fine_tuning": False,

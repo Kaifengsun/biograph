@@ -23,7 +23,7 @@ def validate_lock(lock: dict[str, Any], lock_path: Path) -> dict[str, Any]:
         "candidates_hash_matches": sha256_file(candidates_path) == lock["inputs"]["candidates_sha256"],
         "corpus_manifest_matches": sha256_json(corpus_manifest(corpus_path)) == lock["inputs"]["corpus_manifest_sha256"],
         "candidate_depth_is_50": lock["inference"]["candidate_depth"] == 50,
-        "max_length_is_512": lock["inference"]["max_length"] == 512,
+        "max_length_is_1024": lock["inference"]["max_length"] == 1024,
         "no_fine_tuning": lock["inference"]["fine_tuning"] is False,
         "posthoc_label": lock["evaluation"]["role"] == "supplementary_posthoc",
     }

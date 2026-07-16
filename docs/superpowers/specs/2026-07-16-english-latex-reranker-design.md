@@ -59,12 +59,15 @@ than translated sentence by sentence. The argument will follow this order:
 ### Model and Candidate Flow
 
 The only new supplementary post-hoc reranking condition will be
-`BAAI/bge-reranker-v2-m3`, used as a fixed off-the-shelf cross-encoder. It will
-rerank the top 50 candidates returned by the existing context-matched BM25
+`Qwen/Qwen3-Reranker-0.6B`, used as a fixed off-the-shelf generative
+cross-encoder. It was selected before any neural score was produced because it
+is a newer Apache-2.0 multilingual reranker of the same 0.6B scale as the
+originally considered BGE model and is feasible on the available local GPU. It
+will rerank the top 50 candidates returned by the existing context-matched BM25
 index:
 
 ```
-query -> context-matched BM25 top 50 -> BGE reranker -> top 5 evaluation
+query -> context-matched BM25 top 50 -> Qwen3 reranker -> top 5 evaluation
 ```
 
 The machine-readable output retains the complete reranked top-50 list for each
@@ -78,9 +81,11 @@ will be resolved deterministically by the original BM25 rank and chunk ID.
 
 ### Locked Configuration
 
-- model: `BAAI/bge-reranker-v2-m3`
+- model: `Qwen/Qwen3-Reranker-0.6B`
 - candidate depth: 50
 - output depth: 5
+- instruction: `Given a pharmaceutical regulatory question, retrieve a source passage that directly supports the answer.`
+- score: normalized probability assigned to `yes` versus `no` by the official reranking prompt
 - no fine-tuning
 - no threshold optimization
 - no query-type gate

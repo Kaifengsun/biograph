@@ -1,4 +1,4 @@
-"""Shared deterministic helpers for the supplementary BGE reranker analysis."""
+"""Shared deterministic helpers for the supplementary Qwen3 reranker analysis."""
 
 from __future__ import annotations
 
@@ -18,8 +18,12 @@ from source_chunk_reranker import BM25Index, source_text
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_PACK = ROOT / "data/eval/dual_annotation_58_formal_run_ready_2026-07-16.json"
 DEFAULT_CORPUS = ROOT / "data/staging/enrichment_full_2026-07-deepseek-v4-pro-v4"
-MODEL_ID = "BAAI/bge-reranker-v2-m3"
-MODEL_MAX_LENGTH = 512
+MODEL_ID = "Qwen/Qwen3-Reranker-0.6B"
+MODEL_MAX_LENGTH = 1024
+TASK_INSTRUCTION = (
+    "Given a pharmaceutical regulatory question, retrieve a source passage "
+    "that directly supports the answer."
+)
 CANDIDATE_DEPTH = 50
 PRESENTATION_DEPTH = 5
 BOOTSTRAP_ITERATIONS = 10_000

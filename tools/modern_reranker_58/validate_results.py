@@ -1,4 +1,4 @@
-"""Validate and evaluate the locked supplementary BGE reranker output."""
+"""Validate and evaluate the locked supplementary Qwen3 reranker output."""
 
 from __future__ import annotations
 
@@ -54,18 +54,18 @@ def main() -> None:
         output = output_by_id[query_id]
         gold = set(source["gold_evidence_chunk_ids"])
         bm25 = [row["chunk_id"] for row in source["candidates"]]
-        bge = [row["chunk_id"] for row in output["ranking"]]
+        qwen3 = [row["chunk_id"] for row in output["ranking"]]
         per_query.append({
             "annotation_id": query_id,
             "query_slice": source["query_slice"],
-            "metrics": {"BM25_context_matched": metric_row(bm25, gold), "BGE_posthoc_reranker": metric_row(bge, gold)},
-            "rankings": {"BM25_context_matched": bm25, "BGE_posthoc_reranker": bge},
+            "metrics": {"BM25_context_matched": metric_row(bm25, gold), "Qwen3_posthoc_reranker": metric_row(qwen3, gold)},
+            "rankings": {"BM25_context_matched": bm25, "Qwen3_posthoc_reranker": qwen3},
         })
-    methods = ("BM25_context_matched", "BGE_posthoc_reranker")
+    methods = ("BM25_context_matched", "Qwen3_posthoc_reranker")
     aggregate_rows = {method: aggregate(row["metrics"][method] for row in per_query) for method in methods}
     paired = {
         metric: paired_bootstrap(
-            [row["metrics"]["BGE_posthoc_reranker"][metric] for row in per_query],
+            [row["metrics"]["Qwen3_posthoc_reranker"][metric] for row in per_query],
             [row["metrics"]["BM25_context_matched"][metric] for row in per_query],
             seed=lock["evaluation"]["bootstrap_seed"],
             iterations=lock["evaluation"]["bootstrap_iterations"],
@@ -88,7 +88,7 @@ def main() -> None:
         "methods": list(methods),
         "metrics": list(METRICS),
         "aggregate": aggregate_rows,
-        "paired_bootstrap_bge_minus_bm25": paired,
+        "paired_bootstrap_qwen3_minus_bm25": paired,
         "by_slice": by_slice,
         "per_query": per_query,
         "input_hashes": {"lock": sha256_file(args.lock), "inference": sha256_file(args.inference)},
