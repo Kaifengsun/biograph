@@ -9,7 +9,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import torch
-from modelscope import snapshot_download
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from tools.modern_reranker_58.common import ROOT, rank_scored_candidates, read_json, sha256_file
@@ -43,9 +42,7 @@ def main() -> None:
             raise RuntimeError("existing checkpoint belongs to another lock")
         completed = {row["annotation_id"]: row for row in checkpoint.get("queries", [])}
 
-    snapshot = Path(snapshot_download(
-        lock["model"]["id"], revision=lock["model"]["revision"], local_files_only=True,
-    ))
+    snapshot = ROOT / lock["model"]["local_path"]
     tokenizer = AutoTokenizer.from_pretrained(
         snapshot, local_files_only=True, padding_side="left",
     )

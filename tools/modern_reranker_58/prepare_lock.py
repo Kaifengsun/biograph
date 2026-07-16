@@ -37,6 +37,7 @@ def main() -> None:
     parser.add_argument("--candidates", required=True, type=Path)
     parser.add_argument("--lock", required=True, type=Path)
     parser.add_argument("--model-id", default=MODEL_ID)
+    parser.add_argument("--model-dir", type=Path)
     parser.add_argument("--batch-size", type=int, default=8)
     args = parser.parse_args()
     if args.candidates.exists() or args.lock.exists():
@@ -46,7 +47,13 @@ def main() -> None:
     write_json(args.candidates, candidates)
     model_info = HubApi().model_info(args.model_id, revision="master")
     revision = "master"
-    snapshot = Path(snapshot_download(args.model_id, revision=revision))
+    snapshot = (
+        args.model_dir.resolve()
+        if args.model_dir
+        else Path(snapshot_download(args.model_id, revision=revision))
+    )
+    if not snapshot.is_dir():
+        raise FileNotFoundError(f"model directory does not exist: {snapshot}")
     model_files = model_manifest(snapshot)
     if not any(row["name"].endswith(".safetensors") for row in model_files):
         raise RuntimeError("downloaded model snapshot has no safetensors weights")
@@ -63,6 +70,8 @@ def main() -> None:
             "source_url": f"https://www.modelscope.cn/models/{args.model_id}",
             "revision": revision,
             "source_last_updated": model_info.last_updated_time.isoformat(),
+            "local_path": snapshot.relative_to(ROOT).as_posix(),
+            "download_mode": "direct_modelscope_https" if args.model_dir else "modelscope_sdk",
             "license": "apache-2.0",
             "files": model_files,
             "manifest_sha256": sha256_json(model_files),

@@ -17,6 +17,7 @@ node_modules/
 
 # Local databases, downloaded corpora, and generated indexes
 neo4j_docker_data/
+models/
 data/
 artifacts/
 output/

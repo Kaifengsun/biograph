@@ -7,8 +7,6 @@ import json
 from pathlib import Path
 from typing import Any
 
-from modelscope import snapshot_download
-
 from tools.modern_reranker_58.common import (
     ROOT, corpus_manifest, model_manifest, read_json, sha256_file, sha256_json,
 )
@@ -29,9 +27,7 @@ def validate_lock(lock: dict[str, Any], lock_path: Path) -> dict[str, Any]:
         "no_fine_tuning": lock["inference"]["fine_tuning"] is False,
         "posthoc_label": lock["evaluation"]["role"] == "supplementary_posthoc",
     }
-    snapshot = Path(snapshot_download(
-        lock["model"]["id"], revision=lock["model"]["revision"], local_files_only=True,
-    ))
+    snapshot = ROOT / lock["model"]["local_path"]
     checks["model_manifest_matches"] = (
         sha256_json(model_manifest(snapshot)) == lock["model"]["manifest_sha256"]
     )
