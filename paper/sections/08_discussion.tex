@@ -1,0 +1,36 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{A text-first division of labor}
+
+The experiments do not support a general claim that dense retrieval or graph fusion should replace lexical ranking for this corpus. Regulatory questions often preserve guideline numbers, table labels, defined terms, and clause wording. BM25 used those exact signals and remained the strongest confirmed source-chunk ranker. Flat generated profiles increased the number of semantically plausible index entries but displaced source candidates. Equal-weight fusion then diluted high-confidence lexical hits.
+
+The Qwen3 result refines this conclusion. A modern reranker recovered two additional Top-5 successes within a BM25 candidate set and produced higher overall point estimates. It did not improve Hit@1, and its paired MRR and nDCG intervals crossed zero. Cross-document MRR also declined. The current evidence supports a lexical first stage with optional, separately validated neural reordering. It does not support unconditional semantic fusion or a claim that the neural model is generally better.
+
+Document hierarchy remains useful even when it does not win every ranking comparison. A source chunk can be displayed with its parent section, sibling context, and table membership. Top-down routing also produced descriptive gains in the small document-structure and table slices. These functions improve navigation and interpretability without requiring a summary node to serve as evidence.
+
+\subsection{What the graph contributes}
+
+The graph-constrained text path performed poorly, and enabling the graph made no aggregate difference to the adaptive text ranking. A \texttt{CONTAINS}, \texttt{NEXT}, or \texttt{REFERENCES} edge preserves document organization; it does not prove that the connected chunk answers a query. This distinction explains why adding graph topology to a passage ranker can fail even when the graph itself is correct.
+
+The shortage paths solve a different task. They expose which frozen record names a product, which NDC presentation it affects, which active ingredient is normalized, which company reported it, and what reason and status the source recorded. An analyst can then inspect a separate ICH or FDA passage about risk management. The path supports fact verification and provenance, not causal inference. A reported active-ingredient shortage does not prove that a particular quality-system defect caused the event.
+
+The six accepted paths provide feasibility evidence only. We did not compare them with direct openFDA filtering, SQL joins, or a non-graph entity-resolution pipeline. Future work should measure path precision, abstention, entity-linking errors, and time-aware invalidation before claiming an operational advantage.
+
+\subsection{Implications for regulatory retrieval evaluation}
+
+The evaluation history matters as much as the final table. A descriptive table slice motivated a selective gate; a new confirmation set failed to verify that gate; an independently annotated set failed again. Reporting the failed hypotheses prevents a small favorable slice from becoming a general design claim. The later Qwen3 analysis remains useful because its model, candidate depth, instruction, precision, truncation, tie-breaking, and bootstrap seed were locked before formal scores were inspected. Its post hoc status remains explicit because the Gold queries were already observed in earlier method comparisons.
+
+Double annotation strengthened the relevance judgments but did not remove subjectivity. The reviewers agreed more strongly on the binary question ``does this passage form part of the answer evidence?'' than on the five-way distinction among sufficient evidence, required components, context, and non-support. This difference justifies the binary Gold used for ranking while retaining the richer labels for audit and error analysis. AC1 complements $\kappa$ because imbalanced marginals can make high raw agreement coexist with a low $\kappa$ \cite{gwet2008ac1}.
+
+\subsection{Limitations}
+
+The query sets are small. The principal holdout, ablation set, and first confirmation set each contain 30 questions; the adjudicated formal set contains 58. Slice estimates are less stable. Bootstrap intervals quantify sampling variation inside these pools but do not establish external validity.
+
+Only RQ6 used two independent reviewers. Reviewer A was also the sole author, and Reviewer B was one external domain reviewer rather than an independent panel. Questions were written from frozen source material and may retain guideline numbers, table names, or specialist terms that favor lexical matching. A stronger external evaluation would ask regulatory professionals who did not build the system to write realistic information needs and judge complete answers.
+
+The corpus covers 32 selected English documents and one time-frozen US shortage source. It is not a complete regulatory collection. The 10 July 2026 shortage state must not be read as current at deployment or publication time. Cross-jurisdiction coverage, document revisions, revoked relations, and incremental updates remain untested.
+
+The enrichment ablation evaluates one flat indexing design. The negative HyDE result does not show that generated questions are ineffective for all routing, training, or learned aggregation schemes. The Qwen3 comparison evaluates one 0.6B reranker, one instruction, one fixed candidate depth, and one truncation length. It cannot recover a relevant chunk outside BM25's top 50, although BM25 candidate recall happened to be complete on this set.
+
+Finally, we evaluated retrieval and path recovery rather than generated-answer correctness, citation entailment, hallucination rate, latency under concurrent use, or analyst utility. Separating evidence types may reduce source mixing, but an answer-level blinded study must test that hypothesis.

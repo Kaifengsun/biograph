@@ -1,0 +1,21 @@
+\begin{table}[htbp]
+\centering
+\begin{threeparttable}
+\caption{Selective reranking confirmation set ($n=30$; query-bootstrap 95\% confidence intervals).}
+\label{tab:rq5}
+\small
+\begin{tabularx}{\textwidth}{l*{3}{>{\centering\arraybackslash}X}}
+\toprule
+Method & Hit@5 & MRR & nDCG@5 \\
+\midrule
+Context-matched BM25 & \textbf{0.900 [0.800, 1.000]} & 0.798 [0.667, 0.917] & 0.785 [0.656, 0.901] \\
+R1 source-chunk dense & 0.800 [0.633, 0.933] & 0.718 [0.575, 0.853] & 0.716 [0.571, 0.850] \\
+Unconditional source RRF & 0.833 [0.700, 0.967] & \textbf{0.832 [0.699, 0.941]} & \textbf{0.798 [0.655, 0.919]} \\
+Selective table gate & 0.867 [0.733, 0.967] & 0.790 [0.653, 0.912] & 0.774 [0.636, 0.897] \\
+\bottomrule
+\end{tabularx}
+\begin{tablenotes}[flushleft]\footnotesize
+\item The selective gate did not satisfy the prespecified MRR superiority criterion.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}

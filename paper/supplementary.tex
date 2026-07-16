@@ -1,0 +1,30 @@
+\section{Supplementary Methods and Results}
+\label{sec:supplementary}
+
+\subsection{Audit-preserving annotation workflow}
+
+The RQ6 review package assigned a stable anonymous passage identifier within each separately randomized workbook. A private mapping connected that identifier to the frozen source chunk. Reviewer files did not expose method provenance or Gold anchors. The audit archive preserves the original Reviewer A and Reviewer B workbooks, a normalized machine-readable label ledger, the disagreement list, adjudication notes, and the final 58-query run package. Adjudication produced a new decision layer and did not overwrite either reviewer's submission.
+
+\input{tables/annotation_agreement}
+
+The question-level $\kappa$ values in \Cref{tab:agreement} should not be read as zero practical agreement. Both reviewers agreed on 58 of 60 questions, but one reviewer's use of a single category makes the expected-agreement term degenerate. The passage-level core Gold comparison has non-degenerate positive and negative classes and is the agreement result relevant to retrieval scoring.
+
+\subsection{Selective reranking confirmation}
+
+\input{tables/confirmation_rq5}
+
+The selective gate activated on ten RQ5 queries: five through explicit table language and five through candidate-table support. It improved reciprocal rank on one query, reduced it on one, and left eight unchanged. In the failure case, BM25 ranked a Gold chunk first, while that chunk did not appear in the dense top 30; fusion moved it to rank 13. This example motivated the later decision to rerank a fixed BM25 candidate set rather than weakening lexical candidate recall.
+
+\subsection{Locked Qwen3 configuration}
+
+The supplementary neural experiment used \texttt{Qwen/Qwen3-Reranker-0.6B} from the official ModelScope repository. Nine model files, including the 1,191,588,280-byte \texttt{model.safetensors}, matched the repository SHA-256 values before use. The complete model-file manifest has SHA-256 \texttt{9e345ac4f295b7fe6f9734e1d5c1c73625b7a01ef2217be1896bb608c13fa508}.
+
+The lock specifies BM25 candidate depth 50, maximum model length 1,024, BF16 inference, batch size eight, no fine-tuning, deterministic tie-breaking by BM25 rank and chunk identifier, and bootstrap seed 20260716. The lock validation passed candidate, corpus, Gold-package, model-manifest, and code-hash checks before inference. The complete inference retained 50 unique candidates for all 58 queries. The result-validation artifact has SHA-256 \texttt{4fabee1e7af0fca525ee23f307ffaf634052a6928419ec883b523c43efcbc565}.
+
+\input{tables/qwen_slices}
+
+The reranker changed the distribution of early ranks without changing candidate recall. It improved document-structure ranking most clearly in this small pool, while reducing cross-document reciprocal rank. These mixed effects are why the manuscript reports the aggregate positive signal without a general superiority claim.
+
+\subsection{Reproducibility boundaries}
+
+The public repository contains the experiment code and a text-free lock manifest. Candidate files and review materials contain source passages and remain outside the repository pending licensing review. Local audit paths are machine-specific and are not presented as public data access. The package-level citation audit records the primary or authoritative page used to verify every bibliography entry and the manuscript claim it supports.

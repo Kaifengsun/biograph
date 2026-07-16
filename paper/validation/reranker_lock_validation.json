@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "lock_path": "data\\eval\\modern_reranker_58_qwen3_direct_lock_2026-07-16.json",
+  "checks": {
+    "status_locked_before_scores": true,
+    "results_unobserved_at_lock": true,
+    "pack_hash_matches": true,
+    "candidates_hash_matches": true,
+    "corpus_manifest_matches": true,
+    "candidate_depth_is_50": true,
+    "max_length_is_1024": true,
+    "no_fine_tuning": true,
+    "posthoc_label": true,
+    "model_manifest_matches": true,
+    "all_code_hashes_match": true
+  },
+  "code_checks": {
+    "tools/modern_reranker_58/common.py": true,
+    "tools/modern_reranker_58/validate_lock.py": true,
+    "tools/modern_reranker_58/prepare_lock.py": true,
+    "tools/modern_reranker_58/run_locked_reranker.py": true,
+    "tools/modern_reranker_58/validate_results.py": true
+  },
+  "passed": true
+}

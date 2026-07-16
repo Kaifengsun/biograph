@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "checks": {
+    "lock_valid": true,
+    "inference_complete": true,
+    "all_58_queries_present": true,
+    "all_rankings_have_50": true,
+    "all_rankings_unique": true,
+    "all_candidates_preserved": true,
+    "posthoc_role": true
+  },
+  "reported_all_prespecified_metrics": true,
+  "passed": true,
+  "evaluation_sha256": "4fabee1e7af0fca525ee23f307ffaf634052a6928419ec883b523c43efcbc565"
+}

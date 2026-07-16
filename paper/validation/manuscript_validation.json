@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "checks": {
+    "all_citations_have_bib_entries": true,
+    "all_bib_entries_are_audited": true,
+    "all_audit_entries_are_in_bib": true,
+    "all_audit_rows_verified": true,
+    "no_duplicate_dois": true,
+    "no_secret_like_api_keys": true,
+    "qwen3_called_supplementary": true,
+    "qwen3_called_post_hoc": true,
+    "no_qwen3_superiority_claim": true,
+    "figures_intentionally_deferred": true,
+    "all_result_values_traceable": true
+  },
+  "result_checks": {
+    "bm25_hit5": true,
+    "bm25_mrr": true,
+    "bm25_ndcg5": true,
+    "qwen_hit5": true,
+    "qwen_mrr": true,
+    "qwen_ndcg5": true,
+    "qwen_hit5_delta": true,
+    "qwen_mrr_delta": true,
+    "qwen_ndcg_delta": true
+  },
+  "missing_bib_keys": [],
+  "unaudited_bib_keys": [],
+  "orphan_audit_keys": [],
+  "duplicate_dois": [],
+  "cited_key_count": 33,
+  "bibliography_entry_count": 33,
+  "passed": true
+}

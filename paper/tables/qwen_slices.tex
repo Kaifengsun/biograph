@@ -1,0 +1,24 @@
+\begin{table}[htbp]
+\centering
+\begin{threeparttable}
+\caption{Supplementary Qwen3 and BM25 results by query slice.}
+\label{tab:qwen_slices}
+\begin{tabular}{llccc}
+\toprule
+Slice ($n$) & Method & Hit@5 & MRR@50 & nDCG@5 \\
+\midrule
+Single clause (20) & BM25 & 0.950 & 0.806 & 0.840 \\
+ & Qwen3 & 0.950 & 0.844 & 0.846 \\
+Document structure (15) & BM25 & 1.000 & 0.802 & 0.803 \\
+ & Qwen3 & 1.000 & 0.889 & 0.864 \\
+Table (13) & BM25 & 0.923 & 0.846 & 0.856 \\
+ & Qwen3 & 1.000 & 0.827 & 0.871 \\
+Cross-document (10) & BM25 & 0.900 & 0.842 & 0.644 \\
+ & Qwen3 & 1.000 & 0.728 & 0.619 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]\footnotesize
+\item Slice estimates are descriptive. The Qwen3 analysis is supplementary and post hoc.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}

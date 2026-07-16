@@ -1,0 +1,78 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[a4paper,margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  citecolor=blue!55!black,
+  urlcolor=blue!55!black
+}
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0.2em}
+\newcommand{\method}[1]{\textsc{#1}}
+\newcommand{\todo}[1]{\textcolor{red!70!black}{[Administrative item: #1]}}
+
+\title{Text-First Hierarchical Retrieval for Auditable Pharmaceutical Regulatory Evidence and Supply-Chain Fact Verification}
+\author{
+  Kaifeng Sun\\
+  China Jiliang University, Hangzhou, China\\
+  \texttt{2300702216@cjlu.edu.cn}
+}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Pharmaceutical quality and supply-risk analysis must combine verbatim regulatory evidence with structured facts about products, manufacturers, ingredients, availability, and shortage reasons. However, retrieval systems can obscure this distinction, weakening provenance and encouraging graph relations to be treated as textual support. We present a text-first hierarchical framework that parses 32 regulatory and technical documents into 2,478 source chunks and 312 table records and links them to an evidence graph with 7,578 nodes and 15,237 edges. On a locked 30-query holdout, the adaptive variant reached Hit@5 of 0.767, MRR of 0.518, and nDCG@5 of 0.504; adding graph paths did not improve aggregate text ranking. An independent enrichment ablation found that BM25 outperformed the tested dense and hybrid variants overall. We then constructed a method-blinded 60-query pool and obtained independent labels from the author and an external domain reviewer. Core binary Gold agreement was 0.941, Cohen's $\kappa$ was 0.792, and Gwet's AC1 was 0.918. After excluding two questions with incomplete evidence, a one-shot run on 58 adjudicated queries gave BM25 Hit@5 of 0.948, MRR of 0.820, and nDCG@5 of 0.800. A locked supplementary post hoc Qwen3 reranker over BM25's top 50 increased these values to 0.983, 0.832, and 0.817, but paired intervals did not establish a general advantage. These findings support a bounded design in which lexical ranking is the current default, neural and hierarchical channels support reordering and navigation, and graph paths form a separate fact-verification layer rather than a substitute for citable text.
+\end{abstract}
+
+\noindent\textbf{Keywords:} pharmaceutical regulation; evidence retrieval; knowledge graph; drug shortages; hierarchical retrieval; neural reranking; provenance
+
+\input{sections/01_introduction}
+\input{sections/02_related_work}
+\input{sections/03_task_definition}
+\input{sections/04_data_and_graph}
+\input{sections/05_methods}
+\input{sections/06_experiments}
+\input{sections/07_results}
+\input{sections/08_discussion}
+\input{sections/09_conclusion}
+
+\section*{Data and code availability}
+Source code, tests, method specifications, and non-sensitive audit metadata are available at \url{https://github.com/Kaifengsun/biograph}. The repository excludes API keys, local databases, copyrighted source PDFs, vector indexes, and review workbooks containing reproduced source passages. A release-ready data package will require a separate licensing and privacy review. The manuscript reports frozen artifact hashes and local provenance records so that every numerical result can be checked against the author's audit archive.
+
+\section*{Ethics statement}
+The study used public regulatory documents and public drug-shortage records and did not use patient-level data or recruit clinical participants. One external domain reviewer independently annotated the blinded evidence candidates. Before journal submission, the author will confirm the applicable institutional and journal requirements for this annotation activity and will document the reviewer's contribution and consent for any acknowledgement. No reviewer identity is disclosed in this draft.
+
+\section*{Author contributions}
+Kaifeng Sun: Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Writing -- original draft, Writing -- review and editing, Visualization, and Project administration.
+
+\section*{Funding}
+\todo{Confirm funding statement before submission.}
+
+\section*{Competing interests}
+The author declares no competing interests.
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\appendix
+\input{supplementary}
+
+\end{document}

@@ -1,0 +1,24 @@
+\section{Corpus and Evidence Graph}
+\label{sec:data}
+
+\subsection{Regulatory corpus}
+
+The frozen corpus contains 32 English regulatory and technical documents. It covers multiple ICH Q1--Q14 quality guidelines and drafts, ICH M7(R2), European GMP Annex 11, FDA guidance on pharmaceutical quality systems, and WHO material on essential medicines and stability. PDF-to-Markdown conversion, structural parsing, and cleaning produced 2,478 non-empty source chunks with a maximum length of 2,271 characters. The parser identified 312 table records. \Cref{tab:corpus} summarizes the frozen resources.
+
+\input{tables/corpus_statistics}
+
+The parser retained heading levels, parent-child relations, and local order. The graph contains 756 \texttt{PARENT\_OF} edges and 2,446 \texttt{NEXT} edges. It also contains summaries for 221 section nodes and 32 document nodes. Each summary points to the source unit through \texttt{SUMMARIZES}. Summaries can support routing and browsing, but the evaluation never treats them as source evidence.
+
+\subsection{Source-constrained enrichment}
+
+The enrichment pipeline generated hypothetical questions for eligible chunks of at least 100 characters. A 500-character threshold selected one of two context strategies. Longer chunks relied mainly on their own text; shorter chunks also received parent headings, neighboring text, and same-section table context to restore omitted scope. The frozen corpus contains 3,917 generated question profiles that passed structural and source-grounding checks. The pipeline also created short chunk summaries for eligible long passages and 311 table summaries.
+
+All generated representations map to a source chunk. A retrieved profile is resolved to that chunk before deduplication and evaluation. This rule prevents a plausible generated statement from becoming evidence merely because it resembles the question.
+
+\subsection{Structured shortage data and graph schema}
+
+Structured records came from an openFDA drug-shortage snapshot frozen on 10 July 2026 \cite{openfdaShortages}. The pipeline normalized generic names, company names, package NDCs, availability states, reported reasons, status fields, and update dates into shortage-event, NDC-product, active-ingredient, and manufacturer nodes. Every normalized record retains a pointer to its raw snapshot entry.
+
+The resulting graph contains 7,578 nodes and 15,237 edges. Its major node classes include 2,478 source chunks, 1,633 shortage events, 1,593 NDC products, 225 active ingredients, 131 manufacturers, 32 regulatory documents, 312 tables, 221 section summaries, and 32 document summaries. Supply facts use relations such as \texttt{AFFECTS\_NDC\_PRODUCT}, \texttt{HAS\_ACTIVE\_INGREDIENT}, and \texttt{REPORTED\_BY}. Document structure uses \texttt{CONTAINS}, \texttt{PARENT\_OF}, \texttt{NEXT}, \texttt{HAS\_TABLE}, and \texttt{SUMMARIZES}. Cross-document relations such as \texttt{REFERENCES}, \texttt{SUPERSEDES}, \texttt{COMPLEMENTS}, and \texttt{INTERPRETS} require an explicit source citation or a confirmed rule.
+
+The schema uses conservative semantics. \texttt{MENTIONS} records a normalized alias match and does not imply causation or regulatory dependence. \texttt{REFERENCES} records an explicit citation and does not imply that one document governs another. Uncertain identity links remain \texttt{SAME\_AS\_CANDIDATE} rather than forcing a manufacturer or product merge.

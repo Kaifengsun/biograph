@@ -48,6 +48,13 @@ references/
 *.tar
 *.tar.gz
 
+# LaTeX build and local visual-QA artifacts
+*.aux
+*.bbl
+*.blg
+*.synctex.gz
+paper/validation/rendered_pages/
+
 # Local editor and agent state
 .vscode/
 .claude/

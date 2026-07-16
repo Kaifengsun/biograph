@@ -1,0 +1,20 @@
+\begin{table}[htbp]
+\centering
+\begin{threeparttable}
+\caption{Agreement before joint adjudication.}
+\label{tab:agreement}
+\begin{tabular}{lccc}
+\toprule
+Label level & Exact agreement & Cohen's $\kappa$ & Gwet AC1 \\
+\midrule
+Question status & 0.967 & 0.000 & 0.966 \\
+Evidence completeness & 0.967 & 0.000 & 0.966 \\
+Five-class passage label & 0.663 & 0.488 & 0.599 \\
+Core binary Gold & 0.941 & 0.792 & 0.918 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]\footnotesize
+\item Question-level $\kappa=0$ reflects extreme marginal imbalance: Reviewer A used one category for all questions, while Reviewer B identified two incomplete questions. Core Gold merges \texttt{Sufficient} and \texttt{Required Component}.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}

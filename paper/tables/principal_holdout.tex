@@ -1,0 +1,23 @@
+\begin{table}[t]
+\centering
+\begin{threeparttable}
+\caption{Principal holdout retrieval results ($n=30$).}
+\label{tab:principal}
+\begin{tabular}{lccccc}
+\toprule
+Method & Hit@1 & Hit@3 & Hit@5 & MRR & nDCG@5 \\
+\midrule
+Bottom-up dense & 0.300 & 0.633 & 0.700 & 0.461 & 0.468 \\
+Top-down routing & 0.300 & 0.633 & \textbf{0.767} & 0.487 & 0.496 \\
+Graph-constrained text & 0.033 & 0.100 & 0.100 & 0.061 & 0.064 \\
+Text-only RRF & 0.300 & 0.633 & 0.700 & 0.486 & 0.466 \\
+Unconditional three-path RRF & 0.300 & 0.667 & 0.733 & 0.491 & 0.473 \\
+Adaptive, graph disabled & \textbf{0.333} & \textbf{0.733} & \textbf{0.767} & \textbf{0.518} & \textbf{0.504} \\
+Full adaptive & \textbf{0.333} & \textbf{0.733} & \textbf{0.767} & \textbf{0.518} & \textbf{0.504} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]\footnotesize
+\item Bold marks the largest point estimate in each column. Identical rows for the graph-disabled and full adaptive variants show that graph access made no aggregate text-ranking difference on this set.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
