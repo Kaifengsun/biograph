@@ -1,0 +1,583 @@
+{
+  "schema_version": "1.0",
+  "status": "frozen_jointly_adjudicated_formal_run_ready",
+  "formal_metrics_ready": true,
+  "retrieval_execution_prohibited": false,
+  "confirmatory_for_source_chunk_reranker": true,
+  "single_formal_execution_authorized": true,
+  "created_at_utc": "2026-07-16T03:05:30+00:00",
+  "query_count": 58,
+  "excluded_query_ids": [
+    "DA60-TB10",
+    "DA60-TB13"
+  ],
+  "method_lock": {
+    "path": "outputs\\selective_source_chunk_reranker_method_lock_2026-07-15\\method_lock_manifest.json",
+    "sha256": "45f430fe6546428ef7c21e0bf14e2e4e948e48035114c627ff829ea9d8a355f5",
+    "method_family": "selective_table_gate"
+  },
+  "input_hashes": {
+    "initial_registry": "1b0a3f29e4ba255d17a60a6b4664086fb4b45a30ddc8bc7ef734bc0fb4b25c6c",
+    "reviewer_a": "9947892c1636da27f6dc9ae97235b86cef23453eb0240e3bf71134d3ba85787d",
+    "reviewer_b": [
+      "47dde679b0288b65968da05e82684da366bb0e6c1fbc0fc9a3d9d591a3c57aa5",
+      "e9bbd1081fc54452e9d0214754b91d98420f9583206fec8c0576be1be488f53d",
+      "cf49d3c07152ac43ee5ca98989e24e9d7139079de8dab5b7a8df866868594b1e"
+    ],
+    "disagreement_registry": "aada06090a7ffb9cdc005e9b6cd6b686381c000c657daf6b1720fcd7df2acc27",
+    "final_adjudication": "08ce40d21ed8a4baaa0ec4b2b363714448331d3832f0fbef829f4d8492503fdc",
+    "method_lock": "45f430fe6546428ef7c21e0bf14e2e4e948e48035114c627ff829ea9d8a355f5"
+  },
+  "queries": [
+    {
+      "annotation_id": "DA60-SC01",
+      "batch": "01",
+      "query_slice": "single_clause",
+      "query": "What does EMA GMP Annex 11 require regarding printouts for records supporting batch release?",
+      "gold_evidence_chunk_ids": [
+        "ema_gmp_annex_11_C0012_7e05080d"
+      ]
+    },
+    {
+      "annotation_id": "DA60-SC02",
+      "batch": "01",
+      "query_slice": "single_clause",
+      "query": "According to the FDA guidance, what remedial actions may be taken when a product or process does not meet requirements?",
+      "gold_evidence_chunk_ids": [
+        "fda_cgmp_guidance_C0030_be4bf056"
+      ]
+    },
+    {
+      "annotation_id": "DA60-SC03",
+      "batch": "03",
+      "query_slice": "single_clause",
+      "query": "How was the 0.1% specification for impurity B in starting material Y justified in the ICH M7(R2) example?",
+      "gold_evidence_chunk_ids": [
+        "ich_m7_r2_C0075_83523ec3"
+      ]
+    },
+    {
+      "annotation_id": "DA60-SC04",
+      "batch": "03",
+      "query_slice": "single_clause",
+      "query": "What assurance should the change management system provide according to ICH Q10?",
+      "gold_evidence_chunk_ids": [
+        "ich_q10_C0015_270983de"
+      ]
+    },
+    {
+      "annotation_id": "DA60-SC05",
+      "batch": "03",
+      "query_slice": "single_clause",
+      "query": "In the ICH Q11 example, why might compound A be considered the appropriate starting material instead of a later intermediate?",
+      "gold_evidence_chunk_ids": [
+        "ich_q11_C0059_96322321"
+      ]
+    },
+    {
+      "annotation_id": "DA60-SC06",
+      "batch": "02",
+      "query_slice": "single_clause",
+      "query": "According to ICH Q12, how should non-conformance to process-related established conditions be handled?",
+      "gold_evidence_chunk_ids": [
+        "ich_q12_C0023_154689f8"
+      ]
+    },
+    {
+      "annotation_id": "DA60-SC07",
+      "batch": "02",
+      "query_slice": "single_clause",
+      "query": "In the ICH Q13 equipment design passage, which type of blender was identified as critical to ensure blend uniformity?",
+      "gold_evidence_chunk_ids": [
+        "ich_q13_C0073_07f597ce"
+      ]
+    },
+    {
+      "annotation_id": "DA60-SC08",
+      "batch": "01",
+      "query_slice": "single_clause",
+      "query": "What does the term 'ongoing monitoring' refer to according to ICH Q14?",
+      "gold_evidence_chunk_ids": [
+        "ich_q14_C0061_69a85b4b"
+      ]
+    },
+    {
+      "annotation_id": "DA60-SC09",
+      "batch": "03",
+      "query_slice": "single_clause",
+      "query": "According to the ICH Q1 draft guideline, under which relative humidity condition should aqueous-based products in semi-permeable containers be evaluated for water loss?",
+      "gold_evidence_chunk_ids": [
+        "ich_q1_draft_2025_C0064_197a49f9"
+      ]
+    },
+    {
+      "annotation_id": "DA60-SC10",
+      "batch": "03",
+      "query_slice": "single_clause",
+      "query": "For which regions does the ICH Q1A guideline state that the defined stability data package is sufficient for a registration application?",
+      "gold_evidence_chunk_ids": [
+        "ich_q1a_C0006_52a31560"
+      ]
+    },
+    {
+      "annotation_id": "DA60-SC11",
+      "batch": "02",
+      "query_slice": "single_clause",
+      "query": "According to ICH Q1B, what component, besides direct drug contact, does the immediate (primary) pack include?",
+      "gold_evidence_chunk_ids": [
+        "ich_q1b_C0011_cb6104d2"
+      ]
+    },
+    {
+      "annotation_id": "DA60-SC12",
+      "batch": "01",
+      "query_slice": "single_clause",
+      "query": "According to its introduction, which regulatory regions were recommended for adoption of the ICH Q1C guideline?",
+      "gold_evidence_chunk_ids": [
+        "ich_q1c_C0001_6c21968d"
+      ]
+    },
+    {
+      "annotation_id": "DA60-SC13",
+      "batch": "02",
+      "query_slice": "single_clause",
+      "query": "Which parent guideline does ICH Q1D reference regarding stability testing principles?",
+      "gold_evidence_chunk_ids": [
+        "ich_q1d_C0005_7f22db81"
+      ]
+    },
+    {
+      "annotation_id": "DA60-SC14",
+      "batch": "01",
+      "query_slice": "single_clause",
+      "query": "According to ICH Q1E, what outcome results when stability data from all factor combinations can be pooled?",
+      "gold_evidence_chunk_ids": [
+        "ich_q1e_C0018_4d09277d",
+        "ich_q1e_C0014_54a4b686"
+      ]
+    },
+    {
+      "annotation_id": "DA60-SC15",
+      "batch": "02",
+      "query_slice": "single_clause",
+      "query": "According to the ICH Q2 definition, what are three possible sources of reference materials?",
+      "gold_evidence_chunk_ids": [
+        "ich_q2r2_C0074_fce6653a",
+        "ich_q14_C0072_72d4107e"
+      ]
+    },
+    {
+      "annotation_id": "DA60-SC16",
+      "batch": "01",
+      "query_slice": "single_clause",
+      "query": "According to ICH Q3A, what acceptance criterion applies to unspecified impurities in a new drug substance specification?",
+      "gold_evidence_chunk_ids": [
+        "ich_q3a_r2_C0015_68b33c67",
+        "ich_q3a_r2_C0016_4ba8df71",
+        "ich_q3a_r2_C0021_782843a1"
+      ]
+    },
+    {
+      "annotation_id": "DA60-SC17",
+      "batch": "02",
+      "query_slice": "single_clause",
+      "query": "In ICH Q3B, what steps determine whether a degradation product level exceeds the qualification threshold when the threshold is expressed as total daily intake?",
+      "gold_evidence_chunk_ids": [
+        "ich_q3b_r2_C0011_d1b1b81c"
+      ]
+    },
+    {
+      "annotation_id": "DA60-SC18",
+      "batch": "01",
+      "query_slice": "single_clause",
+      "query": "Per ICH Q3C, what is the range of safety factors used with the no-observed-effect level to determine exposure limits for Class 1 solvents?",
+      "gold_evidence_chunk_ids": [
+        "ich_q3c_r9_C0037_e8c9f1be"
+      ]
+    },
+    {
+      "annotation_id": "DA60-SC19",
+      "batch": "02",
+      "query_slice": "single_clause",
+      "query": "According to the ICH Q3D guideline's Option 2b example for a solid oral drug product, which elemental impurities are identified as of concern from the risk assessment?",
+      "gold_evidence_chunk_ids": [
+        "ich_q3d_r2_C0250_c9c0343d",
+        "ich_q3d_r2_C0251_b9f290d8",
+        "ich_q3d_r2_C0253_b25d9d58"
+      ]
+    },
+    {
+      "annotation_id": "DA60-SC20",
+      "batch": "03",
+      "query_slice": "single_clause",
+      "query": "Per the ICH Q3E draft guideline, what is required when several observed leachables are evaluated as a group in a safety assessment?",
+      "gold_evidence_chunk_ids": [
+        "ich_q3e_draft_C0114_fb36115a"
+      ]
+    },
+    {
+      "annotation_id": "DA60-TB01",
+      "batch": "01",
+      "query_slice": "table",
+      "query": "According to the table illustrating CGMP regulations related to control of outsourced operations, which CFR section applies to consultants and which applies to outsourcing?",
+      "gold_evidence_chunk_ids": [
+        "fda_cgmp_guidance_C0017_f2e4f064"
+      ]
+    },
+    {
+      "annotation_id": "DA60-TB02",
+      "batch": "02",
+      "query_slice": "table",
+      "query": "According to Table 1 of ICH M7(R2), what is the definition for Class 1 impurities?",
+      "gold_evidence_chunk_ids": [
+        "ich_m7_r2_C0023_b7dd2bce"
+      ]
+    },
+    {
+      "annotation_id": "DA60-TB03",
+      "batch": "01",
+      "query_slice": "table",
+      "query": "In ICH Q10's Table I, what application is listed for process performance and product quality monitoring during the pharmaceutical development lifecycle stage?",
+      "gold_evidence_chunk_ids": [
+        "ich_q10_C0013_535f4ed9"
+      ]
+    },
+    {
+      "annotation_id": "DA60-TB04",
+      "batch": "03",
+      "query_slice": "table",
+      "query": "According to the control strategy summary table in ICH Q11, what does the abbreviation 'NMT' stand for?",
+      "gold_evidence_chunk_ids": [
+        "ich_q11_C0062_4ee932b2"
+      ]
+    },
+    {
+      "annotation_id": "DA60-TB05",
+      "batch": "03",
+      "query_slice": "table",
+      "query": "In the ICH Q12 Appendix 1 table, which CTD section is associated with established conditions for the drug substance?",
+      "gold_evidence_chunk_ids": [
+        "ich_q12_C0053_ff0669f2"
+      ]
+    },
+    {
+      "annotation_id": "DA60-TB06",
+      "batch": "01",
+      "query_slice": "table",
+      "query": "According to ICH Q13, what specific controls does Table 2 recommend for managing cleaning and fouling potential in continuous processing?",
+      "gold_evidence_chunk_ids": [
+        "ich_q13_C0065_1335fd65"
+      ]
+    },
+    {
+      "annotation_id": "DA60-TB07",
+      "batch": "03",
+      "query_slice": "table",
+      "query": "In ICH Q14's Table 2, what bridging strategy is recommended for a change in analytical procedure principle?",
+      "gold_evidence_chunk_ids": [
+        "ich_q14_C0030_1cf195a0"
+      ]
+    },
+    {
+      "annotation_id": "DA60-TB08",
+      "batch": "02",
+      "query_slice": "table",
+      "query": "According to ICH Q1's Table A1-1, what three strengths are evaluated in the bracketing design example?",
+      "gold_evidence_chunk_ids": [
+        "ich_q1_draft_2025_C0191_9a88b638"
+      ]
+    },
+    {
+      "annotation_id": "DA60-TB09",
+      "batch": "02",
+      "query_slice": "table",
+      "query": "Per ICH Q1A, what is the long-term storage condition for drug products intended for storage in a freezer?",
+      "gold_evidence_chunk_ids": [
+        "ich_q1a_C0035_56e6f5d8"
+      ]
+    },
+    {
+      "annotation_id": "DA60-TB11",
+      "batch": "03",
+      "query_slice": "table",
+      "query": "According to the ICH Q2(R2) table of reportable ranges, what is the low end of the range for the assay of a product?",
+      "gold_evidence_chunk_ids": [
+        "ich_q2r2_C0013_0057ab10"
+      ]
+    },
+    {
+      "annotation_id": "DA60-TB12",
+      "batch": "02",
+      "query_slice": "table",
+      "query": "What column headings appear in the impurity evaluation table of the ICH Q3A(R2) 0.8 g maximum daily dose example?",
+      "gold_evidence_chunk_ids": [
+        "ich_q3a_r2_C0025_f9728ab8"
+      ]
+    },
+    {
+      "annotation_id": "DA60-TB14",
+      "batch": "01",
+      "query_slice": "table",
+      "query": "In the ICH Q3C(R9) revision history for NMP, on what date was the revised PDE approved for public consultation under Step 2?",
+      "gold_evidence_chunk_ids": [
+        "ich_q3c_r9_C0004_8db14e7b"
+      ]
+    },
+    {
+      "annotation_id": "DA60-TB15",
+      "batch": "02",
+      "query_slice": "table",
+      "query": "According to the ICH Q3D(R2) risk assessment table, what action is recorded in column 8 if the column 5 total does not exceed the column 7 control threshold?",
+      "gold_evidence_chunk_ids": [
+        "ich_q3d_r2_C0256_90943a97"
+      ]
+    },
+    {
+      "annotation_id": "DA60-DS01",
+      "batch": "03",
+      "query_slice": "document_structure",
+      "query": "In ICH M7 R2, under which section does the guideline specify what information to include about mutagenic impurity classification and control for marketing applications, and what key documentation is required?",
+      "gold_evidence_chunk_ids": [
+        "ich_m7_r2_C0049_bfd52f4b"
+      ]
+    },
+    {
+      "annotation_id": "DA60-DS02",
+      "batch": "03",
+      "query_slice": "document_structure",
+      "query": "In ICH Q10, under which section are the four elements of the pharmaceutical quality system described, and what guidance is given about applying them across lifecycle stages?",
+      "gold_evidence_chunk_ids": [
+        "ich_q10_C0011_accffad9"
+      ]
+    },
+    {
+      "annotation_id": "DA60-DS03",
+      "batch": "01",
+      "query_slice": "document_structure",
+      "query": "In ICH Q11, under which section is the concept of design space described, and what does it establish about the regulatory handling of changes within and outside that space?",
+      "gold_evidence_chunk_ids": [
+        "ich_q11_C0019_e3dc1f67",
+        "ich_q11_C0069_bbec3815",
+        "ich_q11_C0020_b4c9023e"
+      ]
+    },
+    {
+      "annotation_id": "DA60-DS04",
+      "batch": "03",
+      "query_slice": "document_structure",
+      "query": "In ICH Q12, which section outlines the complementary regulatory tools for managing post-approval changes, and what does it state about the relationship between regulatory assessment and inspection?",
+      "gold_evidence_chunk_ids": [
+        "ich_q12_C0010_23e7b966",
+        "ich_q12_C0009_acbe1ace"
+      ]
+    },
+    {
+      "annotation_id": "DA60-DS05",
+      "batch": "03",
+      "query_slice": "document_structure",
+      "query": "In ICH Q13, under which section is the diversion of non-conforming material in continuous manufacturing addressed, and what does it specify as factors influencing the amount of material to be diverted?",
+      "gold_evidence_chunk_ids": [
+        "ich_q13_C0016_9167070c"
+      ]
+    },
+    {
+      "annotation_id": "DA60-DS06",
+      "batch": "02",
+      "query_slice": "document_structure",
+      "query": "In the ICH Q14 guideline, which section discusses analytical procedure parameter ranges, and what does it establish regarding regulatory notification when operating within an approved proven acceptable range (PAR)?",
+      "gold_evidence_chunk_ids": [
+        "ich_q14_C0017_b2709a42",
+        "ich_q14_C0018_ad9edf8a"
+      ]
+    },
+    {
+      "annotation_id": "DA60-DS07",
+      "batch": "02",
+      "query_slice": "document_structure",
+      "query": "According to the ICH Q1 draft stability guideline, where is linear regression for an individual batch addressed, and what must be evaluated to support the assumed linear relationship over time?",
+      "gold_evidence_chunk_ids": [
+        "ich_q1_draft_2025_C0118_a45b0c88"
+      ]
+    },
+    {
+      "annotation_id": "DA60-DS08",
+      "batch": "02",
+      "query_slice": "document_structure",
+      "query": "In ICH Q1A, which section covers evaluation of stability data, and what principle does it establish for determining shelf life when batch data cannot be combined?",
+      "gold_evidence_chunk_ids": [
+        "ich_q1a_C0039_ffa6b8fe",
+        "ich_q1a_C0038_e30e17e2"
+      ]
+    },
+    {
+      "annotation_id": "DA60-DS09",
+      "batch": "03",
+      "query_slice": "document_structure",
+      "query": "In ICH Q1D, where is the matrixing design for stability studies defined, and what restriction does it impose on performing matrixing across test attributes?",
+      "gold_evidence_chunk_ids": [
+        "ich_q1d_C0016_d9053be5"
+      ]
+    },
+    {
+      "annotation_id": "DA60-DS10",
+      "batch": "01",
+      "query_slice": "document_structure",
+      "query": "Where in ICH Q2(R2) is the repeatability assessment method described, and what two alternative sets of determination requirements does it specify?",
+      "gold_evidence_chunk_ids": [
+        "ich_q2r2_C0048_20fe52cc"
+      ]
+    },
+    {
+      "annotation_id": "DA60-DS11",
+      "batch": "02",
+      "query_slice": "document_structure",
+      "query": "In ICH Q3A(R2), what section requires comparing impurity profiles of marketing and development batches, and what does it instruct regarding any differences?",
+      "gold_evidence_chunk_ids": [
+        "ich_q3a_r2_C0008_d8c87bac",
+        "ich_q3a_r2_C0007_856727f6"
+      ]
+    },
+    {
+      "annotation_id": "DA60-DS12",
+      "batch": "01",
+      "query_slice": "document_structure",
+      "query": "Where in ICH Q3C(R9) is the risk-based classification of residual solvents found, and what health hazard characteristics place a solvent in Class 2?",
+      "gold_evidence_chunk_ids": [
+        "ich_q3c_r9_C0012_900a877d"
+      ]
+    },
+    {
+      "annotation_id": "DA60-DS13",
+      "batch": "01",
+      "query_slice": "document_structure",
+      "query": "In ICH Q3D(R2), which section derives the permitted daily exposure for inorganic arsenic, and how is the cutaneous PDE obtained from the parenteral PDE?",
+      "gold_evidence_chunk_ids": [
+        "ich_q3d_r2_C0272_e1dac57e",
+        "ich_q3d_r2_C0270_58f5f68a",
+        "ich_q3d_r2_C0257_338c6a09"
+      ]
+    },
+    {
+      "annotation_id": "DA60-DS14",
+      "batch": "02",
+      "query_slice": "document_structure",
+      "query": "According to ICH Q3E draft, where are the considerations for ICH S9 products located, and what defines the safety concern threshold when the TTC is not applicable?",
+      "gold_evidence_chunk_ids": [
+        "ich_q3e_draft_C0062_cebeecae",
+        "ich_q3e_draft_C0044_5a36f7d1"
+      ]
+    },
+    {
+      "annotation_id": "DA60-DS15",
+      "batch": "01",
+      "query_slice": "document_structure",
+      "query": "In ICH Q4B, which section provides implementation considerations for pharmacopoeial text changes, and what regulatory mechanism should sponsors follow when adopting a Q4B-evaluated method?",
+      "gold_evidence_chunk_ids": [
+        "ich_q4b_C0019_2a7091f8"
+      ]
+    },
+    {
+      "annotation_id": "DA60-CD01",
+      "batch": "02",
+      "query_slice": "cross_document",
+      "query": "When stability data from primary batches does not cover the proposed shelf life, what commitment does ICH Q1A require, and what minimum stability data must an ATMP submission include according to ICH Q1?",
+      "gold_evidence_chunk_ids": [
+        "ich_q1_draft_2025_C0255_afaf571b",
+        "ich_q1a_C0037_ca23e83b"
+      ]
+    },
+    {
+      "annotation_id": "DA60-CD02",
+      "batch": "03",
+      "query_slice": "cross_document",
+      "query": "Which two risk dimensions must be considered in quality risk management per FDA CGMP, and for what operations does ICH Q9 provide illustrative examples?",
+      "gold_evidence_chunk_ids": [
+        "ich_q9_C0034_0f0b76c5",
+        "fda_cgmp_guidance_C0035_892ae516"
+      ]
+    },
+    {
+      "annotation_id": "DA60-CD03",
+      "batch": "03",
+      "query_slice": "cross_document",
+      "query": "When determining the number of validation batches, what factors do ICH Q11 and ICH Q7 identify, and what does ICH Q7 recommend as a typical minimum for prospective validation?",
+      "gold_evidence_chunk_ids": [
+        "ich_q11_C0042_6cb92693",
+        "ich_q7_C0069_030c83c2"
+      ]
+    },
+    {
+      "annotation_id": "DA60-CD04",
+      "batch": "03",
+      "query_slice": "cross_document",
+      "query": "Per ICH Q10 and ICH Q12, what elements must a change management system include, and which ICH Q12 chapter provides a structured approach for frequent CMC post-approval changes?",
+      "gold_evidence_chunk_ids": [
+        "ich_q10_C0016_192f9b01",
+        "ich_q12_C0009_acbe1ace",
+        "ich_q12_C0059_0a491636"
+      ]
+    },
+    {
+      "annotation_id": "DA60-CD05",
+      "batch": "02",
+      "query_slice": "cross_document",
+      "query": "What threshold percentage defines the need for additional elemental impurity controls per ICH Q3D, and what does ICH Q3A term the limit above which an impurity must be qualified?",
+      "gold_evidence_chunk_ids": [
+        "ich_q3d_r2_C0027_aa089226",
+        "ich_q3a_r2_C0021_782843a1",
+        "ich_q3d_r2_C0256_90943a97"
+      ]
+    },
+    {
+      "annotation_id": "DA60-CD06",
+      "batch": "02",
+      "query_slice": "cross_document",
+      "query": "According to ICH Q7 and EMA GMP Annex 11, what factors guide decisions on the depth of validation and data integrity controls for computerized systems?",
+      "gold_evidence_chunk_ids": [
+        "ich_q7_C0029_1bee1c48",
+        "ema_gmp_annex_11_C0005_1fd76a4b"
+      ]
+    },
+    {
+      "annotation_id": "DA60-CD07",
+      "batch": "03",
+      "query_slice": "cross_document",
+      "query": "How do ICH Q14's enhanced analytical procedure development elements, such as proven acceptable ranges, influence the revalidation requirements during procedure transfer as described in ICH Q2R2?",
+      "gold_evidence_chunk_ids": [
+        "ich_q14_C0010_dab1ffa3",
+        "ich_q2r2_C0011_1818bda1"
+      ]
+    },
+    {
+      "annotation_id": "DA60-CD08",
+      "batch": "01",
+      "query_slice": "cross_document",
+      "query": "According to ICH Q11 and ICH M7 R2, how should development study knowledge be documented and utilized when evaluating process changes, particularly regarding impurity testing?",
+      "gold_evidence_chunk_ids": [
+        "ich_q11_C0025_47f9587d",
+        "ich_m7_r2_C0044_19321ab4"
+      ]
+    },
+    {
+      "annotation_id": "DA60-CD09",
+      "batch": "01",
+      "query_slice": "cross_document",
+      "query": "How do ICH Q11 and ICH M7 R2 recommend using commercial manufacturing knowledge to adjust the control strategy and reassess impurity testing during the product lifecycle?",
+      "gold_evidence_chunk_ids": [
+        "ich_q11_C0050_47927e3e",
+        "ich_m7_r2_C0044_19321ab4"
+      ]
+    },
+    {
+      "annotation_id": "DA60-CD10",
+      "batch": "01",
+      "query_slice": "cross_document",
+      "query": "According to ICH Q11 and ICH Q1A, what information should be included in control strategy summary tables, and how are shelf-life acceptance criteria derived from stability studies?",
+      "gold_evidence_chunk_ids": [
+        "ich_q11_C0061_f28e8e38",
+        "ich_q1a_C0027_48741aed",
+        "ich_q11_C0041_221ad793"
+      ]
+    }
+  ]
+}
