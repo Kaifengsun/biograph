@@ -48,7 +48,7 @@ def main() -> None:
     )
     tokenizer.pad_token = tokenizer.eos_token
     model = AutoModelForCausalLM.from_pretrained(
-        snapshot, local_files_only=True, torch_dtype=torch.bfloat16,
+        snapshot, local_files_only=True, dtype=torch.bfloat16,
     ).to(lock["inference"]["device"])
     model.eval()
     torch.manual_seed(0)
