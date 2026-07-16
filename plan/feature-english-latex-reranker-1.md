@@ -95,7 +95,7 @@ confirmatory experiment.
 ## 4. Dependencies
 
 - **DEP-001**: `D:\Anaconda3\python.exe` with PyTorch and Transformers.
-- **DEP-002**: Hugging Face model repository `Qwen/Qwen3-Reranker-0.6B`.
+- **DEP-002**: Official ModelScope repository `Qwen/Qwen3-Reranker-0.6B`, locked by file hashes.
 - **DEP-003**: Frozen pack `data/eval/dual_annotation_58_formal_run_ready_2026-07-16.json`.
 - **DEP-004**: Frozen corpus `data/staging/enrichment_full_2026-07-deepseek-v4-pro-v4`.
 - **DEP-005**: Existing BM25 implementation in `source_chunk_reranker.py`.
@@ -137,4 +137,4 @@ confirmatory experiment.
 - `docs/superpowers/specs/2026-07-16-english-latex-reranker-design.md`
 - `sections/draft_chinese_rewritten.md`
 - `data/eval/dual_annotation_58_formal_run_ready_2026-07-16.json`
-- https://huggingface.co/Qwen/Qwen3-Reranker-0.6B
+- https://www.modelscope.cn/models/Qwen/Qwen3-Reranker-0.6B

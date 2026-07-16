@@ -105,6 +105,13 @@ consumes it must be committed. The lock must record:
 - all metrics, cutoffs, bootstrap settings, and analysis code version; and
 - the exact execution command and output locations.
 
+The official Qwen ModelScope repository is used as the domestic download
+source because the attempted Hugging Face mirror redirected to the original
+Hub and failed before any model score was produced. ModelScope's `master`
+revision name is not treated as immutable: the lock records every downloaded
+file's SHA-256 digest and the aggregate manifest hash, and inference refuses to
+run if any local model file differs.
+
 The run follows a one-shot reporting rule: every valid result and every
 prespecified metric is retained regardless of direction. After reranker scores
 on the 58 queries have been inspected, the model, preprocessing, payload,

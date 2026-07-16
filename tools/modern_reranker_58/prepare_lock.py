@@ -11,12 +11,13 @@ from pathlib import Path
 
 import torch
 import transformers
-from huggingface_hub import HfApi, snapshot_download
+from modelscope import snapshot_download
+from modelscope.hub.api import HubApi
 
 from tools.modern_reranker_58.common import (
     BOOTSTRAP_ITERATIONS, BOOTSTRAP_SEED, CANDIDATE_DEPTH, DEFAULT_CORPUS,
     DEFAULT_PACK, MODEL_ID, MODEL_MAX_LENGTH, ROOT, TASK_INSTRUCTION, corpus_manifest,
-    prepare_bm25_candidates, sha256_file, sha256_json, write_json,
+    model_manifest, prepare_bm25_candidates, sha256_file, sha256_json, write_json,
 )
 
 
@@ -27,18 +28,6 @@ CODE_FILES = (
     "tools/modern_reranker_58/run_locked_reranker.py",
     "tools/modern_reranker_58/validate_results.py",
 )
-
-
-def model_manifest(snapshot_path: Path) -> list[dict[str, object]]:
-    files = [path for path in sorted(snapshot_path.rglob("*")) if path.is_file()]
-    return [
-        {
-            "name": path.relative_to(snapshot_path).as_posix(),
-            "size": path.stat().st_size,
-            "sha256": sha256_file(path),
-        }
-        for path in files
-    ]
 
 
 def main() -> None:
@@ -55,8 +44,8 @@ def main() -> None:
 
     candidates = prepare_bm25_candidates(args.pack, args.corpus)
     write_json(args.candidates, candidates)
-    model_info = HfApi().model_info(args.model_id)
-    revision = str(model_info.sha)
+    model_info = HubApi().model_info(args.model_id, revision="master")
+    revision = "master"
     snapshot = Path(snapshot_download(args.model_id, revision=revision))
     model_files = model_manifest(snapshot)
     if not any(row["name"].endswith(".safetensors") for row in model_files):
@@ -70,7 +59,10 @@ def main() -> None:
         "one_shot_reporting_rule": True,
         "model": {
             "id": args.model_id,
+            "source": "modelscope_official_qwen_repository",
+            "source_url": f"https://www.modelscope.cn/models/{args.model_id}",
             "revision": revision,
+            "source_last_updated": model_info.last_updated_time.isoformat(),
             "license": "apache-2.0",
             "files": model_files,
             "manifest_sha256": sha256_json(model_files),

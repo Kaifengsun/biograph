@@ -65,6 +65,18 @@ def corpus_manifest(corpus_path: Path) -> list[dict[str, Any]]:
     ]
 
 
+def model_manifest(snapshot_path: Path) -> list[dict[str, Any]]:
+    files = [path for path in sorted(snapshot_path.rglob("*")) if path.is_file()]
+    return [
+        {
+            "name": path.relative_to(snapshot_path).as_posix(),
+            "size": path.stat().st_size,
+            "sha256": sha256_file(path),
+        }
+        for path in files
+    ]
+
+
 def normalized_payload(record: dict[str, Any]) -> str:
     return unicodedata.normalize("NFC", source_text(record, max_chars=2000))
 
