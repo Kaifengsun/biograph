@@ -1,0 +1,132 @@
+{
+  "schema_version": "1.0",
+  "status": "locked_before_posthoc_neural_scores",
+  "created_at_utc": "2026-07-16T07:02:04+00:00",
+  "results_observed_at_lock": false,
+  "one_shot_reporting_rule": true,
+  "model": {
+    "id": "Qwen/Qwen3-Reranker-0.6B",
+    "source": "modelscope_official_qwen_repository",
+    "source_url": "https://www.modelscope.cn/models/Qwen/Qwen3-Reranker-0.6B",
+    "revision": "master",
+    "source_last_updated": "2025-06-11T00:18:50+08:00",
+    "local_path": "models/qwen3-reranker-0.6b-modelscope-20260716-v1",
+    "download_mode": "direct_modelscope_https",
+    "license": "apache-2.0",
+    "files": [
+      {
+        "name": "config.json",
+        "size": 727,
+        "sha256": "d479c427a9ca5295218063d4f9aca4f297ab4ac27487cca7af42c84643d51ef0"
+      },
+      {
+        "name": "configuration.json",
+        "size": 73,
+        "sha256": "f888421726665e8a84b738eed42a64875aed79de8be7daade851ac8bf4c0cef9"
+      },
+      {
+        "name": "generation_config.json",
+        "size": 214,
+        "sha256": "81051cd3f6e77013827148d0b8a6ead93f8ac390d5ab805f849199f0af6a08db"
+      },
+      {
+        "name": "merges.txt",
+        "size": 1671853,
+        "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5"
+      },
+      {
+        "name": "model.safetensors",
+        "size": 1191588280,
+        "sha256": "27cd75a405b9c1b46b59abfd88aaa209e6fed2a1972cde9b70e7659537c5e65b"
+      },
+      {
+        "name": "README.md",
+        "size": 13319,
+        "sha256": "e9cf97a55cb476bbf7f1e4a321ae1637834535319002552d91e880deaabc5393"
+      },
+      {
+        "name": "tokenizer.json",
+        "size": 11422654,
+        "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+      },
+      {
+        "name": "tokenizer_config.json",
+        "size": 9706,
+        "sha256": "253153d0738ceb4c668d2eff957714dd2bea0b56de772a9fdccd96cbf517e6a0"
+      },
+      {
+        "name": "vocab.json",
+        "size": 2776833,
+        "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+      }
+    ],
+    "manifest_sha256": "9e345ac4f295b7fe6f9734e1d5c1c73625b7a01ef2217be1896bb608c13fa508"
+  },
+  "inputs": {
+    "pack_path": "data/eval/dual_annotation_58_formal_run_ready_2026-07-16.json",
+    "pack_sha256": "222b54bf750df2de715e65286c06b234d5b6baa94b1777ae4077ddea36d78431",
+    "corpus_path": "data/staging/enrichment_full_2026-07-deepseek-v4-pro-v4",
+    "corpus_manifest_sha256": "e877cce4a2e0aa350ac849f90b7ed97772e3bec8581f98fc33681b212efd3c6d",
+    "candidates_path": "outputs/modern_reranker_58_2026-07-16/frozen_bm25_top50_candidates_qwen3_direct_v1.json",
+    "candidates_sha256": "6d2514895b8a34e2646c6d5f54b1de3d9cbbabe89860d239e51c0b1112f15e17"
+  },
+  "inference": {
+    "candidate_depth": 50,
+    "stored_ranking_depth": 50,
+    "presentation_depth": 5,
+    "max_length": 1024,
+    "truncation": "longest_first_formatted_pair",
+    "padding": "left_longest_in_batch",
+    "task_instruction": "Given a pharmaceutical regulatory question, retrieve a source passage that directly supports the answer.",
+    "score": "normalized_yes_probability_against_no",
+    "unicode_normalization": "NFC",
+    "payload_fields": [
+      "parents_context",
+      "heading",
+      "content"
+    ],
+    "payload_max_chars": 2000,
+    "precision": "bfloat16",
+    "device": "cuda:0",
+    "batch_size": 8,
+    "fine_tuning": false,
+    "tie_break": [
+      "score_desc",
+      "bm25_rank_asc",
+      "chunk_id_asc"
+    ],
+    "raw_logit_abs_tolerance": 1e-05,
+    "raw_logit_rel_tolerance": 1e-05
+  },
+  "evaluation": {
+    "role": "supplementary_posthoc",
+    "metrics": [
+      "hit_at_1",
+      "hit_at_3",
+      "hit_at_5",
+      "hit_at_50",
+      "mrr_at_50",
+      "ndcg_at_5"
+    ],
+    "bootstrap_iterations": 10000,
+    "bootstrap_seed": 20260716,
+    "gain": "binary",
+    "resampling_unit": "query"
+  },
+  "runtime": {
+    "python": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 16:37:03) [MSC v.1929 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "torch": "2.11.0.dev20260117+cu128",
+    "transformers": "4.57.6",
+    "cuda_available": true,
+    "cuda_device": "NVIDIA GeForce RTX 5060 Laptop GPU"
+  },
+  "code_hashes": {
+    "tools/modern_reranker_58/common.py": "a812433c6e4088bd0b3542c28871a167bdfaa91d3024a527bc79ce0c43c0a4f0",
+    "tools/modern_reranker_58/validate_lock.py": "27011d056603ad5397343c650569c50ad6c0fc3fbfb5881f1017a0ae7c827082",
+    "tools/modern_reranker_58/prepare_lock.py": "2cbc0f94267bd132e50524865696512f0e285bdc6cfef45fb096a249428a6ff2",
+    "tools/modern_reranker_58/run_locked_reranker.py": "a3c494639b66edf3963ac448a2befaf19d8e9bfbfe2513a4876ac9232f85a5dc",
+    "tools/modern_reranker_58/validate_results.py": "b1bec5c3a81f8e7d281e340f05a6238dc8a9740f8762e4b700e6c491f6bedd50"
+  },
+  "execution_command": "python -m tools.modern_reranker_58.run_locked_reranker --lock data/eval/modern_reranker_58_qwen3_direct_lock_2026-07-16.json --output outputs/modern_reranker_58_2026-07-16/inference.json"
+}
