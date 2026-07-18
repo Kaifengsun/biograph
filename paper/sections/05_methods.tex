@@ -13,6 +13,10 @@ Candidate ranks vote for documents through reciprocal-rank contributions. The tw
 
 Deterministic breadth-first traversal has depth four and expands at most 800 states. Structured paths preserve edge direction, node properties, and provenance. A separate experimental route uses graph-reachable documents to constrain text retrieval. Structured records remain outside text metrics.
 
+\subsection{Relation-aware evidence-chain ranking}
+
+A feedback-driven supplementary experiment ranks connected, possibly branching graph chains of one to five canonical directed triples. Candidate generation uses a fixed 12-relation supply-and-regulatory projection, question-matched entity anchors, and identical candidates for all conditions. B0 orders chains only by length and signature. M0 adds question--node token overlap, edge provenance coverage, and a length penalty. R1 additionally scores coverage and precision of explicit relation phrases and anchor-relative canonical orientation. Cue-off and direction-off remove the corresponding R1 components. Exact feature weights, aliases, caps, graph hashes, and deterministic tie-breaking were frozen in a machine-readable lock before evaluation.
+
 \subsection{Fusion and adaptive variants}
 
 Bottom-up, top-down, and graph-constrained rankings use reciprocal-rank fusion. For source chunk $c$,

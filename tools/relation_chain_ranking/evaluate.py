@@ -52,8 +52,8 @@ def stratified_bootstrap(
     by_category: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in per_query:
         by_category[row["category"]].append(row)
-    if sorted(map(len, by_category.values())) != [10, 10, 10]:
-        raise ValueError("bootstrap requires three fixed 10-question categories")
+    if len(by_category) != 3 or any(not rows for rows in by_category.values()):
+        raise ValueError("bootstrap requires three non-empty fixed categories")
     rng = np.random.Generator(np.random.PCG64(BOOTSTRAP_SEED))
     samples = np.empty(BOOTSTRAP_ITERATIONS, dtype=np.float64)
     ordered = [by_category[key] for key in sorted(by_category)]
@@ -90,17 +90,17 @@ def ambiguity_audit(gold: dict[str, Any], graph: Any) -> list[dict[str, Any]]:
         gold_keys = {
             (edge["source"], edge["relation"], edge["target"]) for edge in row["gold_edges"]
         }
-        alternatives = []
+        alternatives: set[tuple[str, str, str]] = set()
         for source, relation, _ in sorted(gold_keys):
             for key in graph.adjacency.get(source, ()):
                 if key[0] == source and key[1] == relation and key not in gold_keys:
-                    alternatives.append(list(key))
+                    alternatives.add(key)
         if alternatives:
             findings.append(
                 {
                     "review_id": row["review_id"],
                     "final_question": row["final_question"],
-                    "non_gold_same_source_relation_edges": sorted(alternatives),
+                    "non_gold_same_source_relation_edges": [list(key) for key in sorted(alternatives)],
                     "note": (
                         "Potential alternative answer or extra branch; inspect question wording. "
                         "This audit does not automatically change Gold."
@@ -116,7 +116,9 @@ def evaluate(
     ranking_dir: Path,
     graph: Any,
     method_lock_path: Path,
+    strict_exclusions: set[str] | None = None,
 ) -> dict[str, Any]:
+    strict_exclusions = strict_exclusions or set()
     if rankings.get("method_lock_sha256") != sha256_file(method_lock_path):
         raise ValueError("ranking output does not match method lock")
     gold_by_id = {row["review_id"]: row for row in gold.get("questions", [])}
@@ -190,6 +192,26 @@ def evaluate(
             metric: stratified_bootstrap(per_query, "r1", control, metric)
             for metric in METRIC_NAMES
         }
+    strict_rows = [row for row in per_query if row["review_id"] not in strict_exclusions]
+    strict_aggregate = {
+        method: aggregate([row["metrics"][method] for row in strict_rows]) for method in METHODS
+    }
+    strict_by_category = {
+        category: {
+            method: aggregate(
+                [row["metrics"][method] for row in strict_rows if row["category"] == category]
+            )
+            for method in METHODS
+        }
+        for category in categories
+    }
+    strict_comparisons = {
+        f"r1_minus_{control}": {
+            metric: stratified_bootstrap(strict_rows, "r1", control, metric)
+            for metric in METRIC_NAMES
+        }
+        for control in ("b0", "m0", "cue_off", "direction_off")
+    }
     return {
         "schema_version": "1.0",
         "status": "feedback_driven_exploratory_graph_chain_evaluation_complete",
@@ -204,34 +226,53 @@ def evaluate(
         "wording_sensitivity": sensitivity,
         "ambiguity_audit": ambiguity_audit(gold, graph),
         "per_query": per_query,
+        "strict_metrics": {
+            "status": "audit_qualified_complete_chain_metrics",
+            "query_count": len(strict_rows),
+            "excluded_review_ids": sorted(strict_exclusions),
+            "candidate_generation_recall": float(
+                np.mean([row["gold_generated"] for row in strict_rows])
+            ),
+            "category_counts": {
+                category: sum(row["category"] == category for row in strict_rows)
+                for category in categories
+            },
+            "aggregate": strict_aggregate,
+            "by_category": strict_by_category,
+            "paired_bootstrap": strict_comparisons,
+        },
     }
 
 
 def markdown_report(result: dict[str, Any]) -> str:
+    strict = result["strict_metrics"]
     lines = [
         "# Exploratory relation-aware graph evidence-chain ranking",
         "",
         "This experiment was added after project-group feedback and is exploratory, not confirmatory.",
         "",
-        f"- Questions: {result['query_count']}",
-        f"- Candidate-generation recall: {result['candidate_generation_recall']:.3f}",
+        f"- Audit-qualified strict questions: {strict['query_count']}",
+        f"- Strict exclusions: {', '.join(strict['excluded_review_ids'])}",
+        f"- Strict candidate-generation recall: {strict['candidate_generation_recall']:.3f}",
+        f"- Transparent unfiltered questions: {result['query_count']}",
+        f"- Unfiltered candidate-generation recall: {result['candidate_generation_recall']:.3f}",
         f"- Candidate-cap queries: {result['candidate_cap_count']}",
         f"- Work-limit aborts: {result['work_limit_abort_count']}",
         f"- Anchor failures: {result['anchor_failure_count']}",
         "",
-        "## Overall",
+        "## Audit-qualified strict result",
         "",
         "| Method | Hit@1 | Hit@3 | Hit@5 | MRR |",
         "|---|---:|---:|---:|---:|",
     ]
     for method in METHODS:
-        row = result["aggregate"][method]
+        row = strict["aggregate"][method]
         lines.append(
             f"| {method} | {row['hit_at_1']:.3f} | {row['hit_at_3']:.3f} | "
             f"{row['hit_at_5']:.3f} | {row['mrr']:.3f} |"
         )
-    lines.extend(["", "## Category slices", ""])
-    for category, methods in result["by_category"].items():
+    lines.extend(["", "## Strict category slices", ""])
+    for category, methods in strict["by_category"].items():
         lines.extend(
             [
                 f"### {category}",
@@ -247,8 +288,8 @@ def markdown_report(result: dict[str, Any]) -> str:
                 f"{row['hit_at_5']:.3f} | {row['mrr']:.3f} |"
             )
         lines.append("")
-    lines.extend(["## R1 paired differences", ""])
-    for comparison, metrics in result["paired_bootstrap"].items():
+    lines.extend(["## Strict R1 paired differences", ""])
+    for comparison, metrics in strict["paired_bootstrap"].items():
         lines.append(f"### {comparison}")
         lines.append("")
         for metric, interval in metrics.items():
@@ -257,6 +298,21 @@ def markdown_report(result: dict[str, Any]) -> str:
                 f"(95% percentile interval {interval['ci_low']:.3f}, {interval['ci_high']:.3f})"
             )
         lines.append("")
+    lines.extend(
+        [
+            "## Transparent unfiltered 30-question result",
+            "",
+            "| Method | Hit@1 | Hit@3 | Hit@5 | MRR |",
+            "|---|---:|---:|---:|---:|",
+        ]
+    )
+    for method in METHODS:
+        row = result["aggregate"][method]
+        lines.append(
+            f"| {method} | {row['hit_at_1']:.3f} | {row['hit_at_3']:.3f} | "
+            f"{row['hit_at_5']:.3f} | {row['mrr']:.3f} |"
+        )
+    lines.append("")
     lines.extend(
         [
             "## Limitations",
@@ -287,14 +343,41 @@ def main() -> None:
     parser.add_argument("--edges", type=Path, required=True)
     parser.add_argument("--output-json", type=Path, required=True)
     parser.add_argument("--output-md", type=Path, required=True)
+    parser.add_argument("--ambiguity-decisions", type=Path)
     args = parser.parse_args()
+    strict_exclusions: set[str] = set()
+    if args.ambiguity_decisions:
+        decision_payload = read_json(args.ambiguity_decisions)
+        for row in decision_payload.get("rows", []):
+            review_id = str(row.get("Review ID", "")).strip()
+            decision = str(row.get("Final Decision", "")).strip()
+            note = str(row.get("Joint Note", "")).strip()
+            if not review_id or not decision or not note:
+                raise ValueError("ambiguity decision rows require ID, decision, and joint note")
+            if decision == "Unresolved":
+                raise ValueError(f"unresolved ambiguity decision: {review_id}")
+            if decision == "Exclude from strict metrics":
+                strict_exclusions.add(review_id)
+        if strict_exclusions != {"MH-SC04", "MH-SC08"}:
+            raise ValueError(f"unexpected strict exclusion set: {sorted(strict_exclusions)}")
     result = evaluate(
         read_json(args.gold),
         read_json(args.rankings),
         args.rankings.parent,
         load_graph(args.nodes, args.edges),
         args.method_lock,
+        strict_exclusions,
     )
+    if args.ambiguity_decisions:
+        result["ambiguity_decisions_sha256"] = sha256_file(args.ambiguity_decisions)
+    result["audit_provenance"] = {
+        "evaluation_code_sha256": sha256_file(Path(__file__)),
+        "gold_sha256": sha256_file(args.gold),
+        "rankings_manifest_sha256": sha256_file(args.rankings),
+        "method_lock_sha256": sha256_file(args.method_lock),
+        "nodes_sha256": sha256_file(args.nodes),
+        "edges_sha256": sha256_file(args.edges),
+    }
     write_json(args.output_json, result)
     args.output_md.parent.mkdir(parents=True, exist_ok=True)
     if args.output_md.exists():

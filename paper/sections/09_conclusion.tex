@@ -1,6 +1,6 @@
 \section{Conclusion}
 \label{sec:conclusion}
 
-Pharmaceutical evidence systems should separate citable passages from structured shortage facts. On 58 adjudicated questions, BM25 remained the strongest confirmed source ranker. Qwen3 produced modest positive point estimates, while MedCPT and flat enrichment reduced performance. Hierarchy improved context, and six graph paths demonstrated structured fact recovery without improving text ranking.
+Pharmaceutical evidence systems should separate citable passages from structured supply and regulatory facts. On 58 adjudicated questions, BM25 remained the strongest confirmed source ranker. Qwen3 produced modest positive point estimates, while MedCPT and flat enrichment reduced performance. Hierarchy improved context. In a separate exploratory 28-question test, relation-aware ranking recovered 78.6\% of exact graph chains within five candidates, with strong shortage and regulatory results but weak API-supply performance.
 
-The resulting architecture uses lexical retrieval by default, validates neural reordering on the target corpus, and presents graph paths as sourced claims. It does not predict shortage duration or causal impact. It gives analysts a traceable route from question to passage, entity relation, and frozen source.
+The resulting architecture uses lexical retrieval by default, validates neural reordering on the target corpus, and presents graph chains as sourced claims. It does not predict shortage duration or causal impact, and the graph result does not establish general multi-hop reasoning. It gives analysts a traceable route from question to passage, entity relation, and frozen source.

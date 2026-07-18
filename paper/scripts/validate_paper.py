@@ -11,6 +11,10 @@ from pathlib import Path
 PAPER = Path(__file__).resolve().parents[1]
 ROOT = PAPER.parent
 RESULTS = ROOT / "outputs/modern_reranker_58_2026-07-16/qwen3_direct_posthoc_evaluation.json"
+GRAPH_RESULTS = ROOT / (
+    "outputs/relation_chain_ranking_30_2026-07-18/"
+    "evaluation_v4_audit_qualified_v2.json"
+)
 REPORT = PAPER / "validation/manuscript_validation.json"
 
 
@@ -81,6 +85,28 @@ def main() -> None:
             result_checks[name] = f"{actual:.3f}" == rendered and rendered in all_tex
     else:
         result_checks["local_results_available"] = False
+
+    if GRAPH_RESULTS.exists():
+        payload = json.loads(GRAPH_RESULTS.read_text(encoding="utf-8"))
+        strict = payload["strict_metrics"]
+        r1 = strict["aggregate"]["r1"]
+        m0_delta = strict["paired_bootstrap"]["r1_minus_m0"]["hit_at_5"]
+        direction_delta = strict["paired_bootstrap"]["r1_minus_direction_off"]["hit_at_5"]
+        graph_expected = {
+            "graph_strict_n": (strict["query_count"], "28"),
+            "graph_r1_hit1": (r1["hit_at_1"], "0.571"),
+            "graph_r1_hit5": (r1["hit_at_5"], "0.786"),
+            "graph_r1_mrr": (r1["mrr"], "0.663"),
+            "graph_r1_m0_hit5_delta": (m0_delta["delta"], "0.643"),
+            "graph_r1_direction_hit5_delta": (direction_delta["delta"], "0.036"),
+        }
+        for name, (actual, rendered) in graph_expected.items():
+            if isinstance(actual, int):
+                result_checks[name] = str(actual) == rendered and rendered in all_tex
+            else:
+                result_checks[name] = f"{actual:.3f}" == rendered and rendered in all_tex
+    else:
+        result_checks["local_graph_results_available"] = False
 
     checks["all_result_values_traceable"] = all(result_checks.values())
     report = {

@@ -32,3 +32,4 @@ gwet2008ac1,https://doi.org/10.1348/000711006X126600,verified,verified,"AC1 and 
 holm1979multiple,https://www.jstor.org/stable/4615733,verified,verified,"Sequentially rejective correction for multiple testing"
 wilcoxon1945rank,https://doi.org/10.2307/3001968,verified,verified,"Paired rank-based comparison"
 mcnemar1947correlated,https://doi.org/10.1007/BF02295996,verified,verified,"Paired comparison of correlated binary outcomes"
+jin2023medcpt,https://doi.org/10.1093/bioinformatics/btad651,verified,verified,"PubMed-search-log pretraining and zero-shot biomedical retrieval setting used by MedCPT"

@@ -36,9 +36,9 @@ Implement the approved exploratory experiment in a reproducible pipeline that fr
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
-| TASK-001 | Add `tools/relation_chain_ranking/finalize.py` to validate returned reviews and consensus, apply six decisions, check 30/category counts, and write private and sanitized ledgers. | | |
-| TASK-002 | Add integrity hashing for registry, reviews, consensus, nodes, edges, and generated ledgers. | | |
-| TASK-003 | Add a question-ambiguity audit that reports graph alternatives without silently editing adjudicated wording. | | |
+| TASK-001 | Add `tools/relation_chain_ranking/finalize.py` to validate returned reviews and consensus, apply six decisions, check 30/category counts, and write private and sanitized ledgers. | Yes | 2026-07-18 |
+| TASK-002 | Add integrity hashing for registry, reviews, consensus, nodes, edges, and generated ledgers. | Yes | 2026-07-18 |
+| TASK-003 | Add a question-ambiguity audit that reports graph alternatives without silently editing adjudicated wording. | Yes | 2026-07-18 |
 
 ### Implementation Phase 2
 
@@ -46,10 +46,10 @@ Implement the approved exploratory experiment in a reproducible pipeline that fr
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
-| TASK-004 | Add graph loading, parallel-edge merging, alias construction, anchor detection, and fixed projection in `core.py`. | | |
-| TASK-005 | Add deterministic connected-chain enumeration with five-edge, 50,000-candidate, 64-anchor, and 2,000,000-work-unit limits. | | |
-| TASK-006 | Add B0, M0, cue-off, direction-off, and R1 feature computation and stable ranking in `rank.py`. | | |
-| TASK-007 | Add a lock writer containing normative aliases, stop list, weights, limits, hashes, and Git commit. | | |
+| TASK-004 | Add graph loading, parallel-edge merging, alias construction, anchor detection, and fixed projection in `core.py`. | Yes | 2026-07-18 |
+| TASK-005 | Add deterministic connected-chain enumeration with five-edge, 50,000-candidate, 64-anchor, and 2,000,000-work-unit limits. | Yes | 2026-07-18 |
+| TASK-006 | Add B0, M0, cue-off, direction-off, and R1 feature computation and stable ranking in `rank.py`. | Yes | 2026-07-18 |
+| TASK-007 | Add a lock writer containing normative aliases, stop list, weights, limits, hashes, and Git commit. | Yes | 2026-07-18 |
 
 ### Implementation Phase 3
 
@@ -57,10 +57,10 @@ Implement the approved exploratory experiment in a reproducible pipeline that fr
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
-| TASK-008 | Add exact-chain metrics, category macros, 10,000-replicate stratified paired bootstrap, and original-versus-revised sensitivity in `evaluate.py`. | | |
-| TASK-009 | Add focused tests in `tests/test_relation_chain_ranking.py` and run the relevant test suite. | | |
-| TASK-010 | Execute finalization, lock, inference, and evaluation in separate commands; preserve all JSON/Markdown outputs. | | |
-| TASK-011 | Update public experiment documentation and the English LaTeX manuscript with only verified results and limitations. | | |
+| TASK-008 | Add exact-chain metrics, category macros, 10,000-replicate stratified paired bootstrap, and original-versus-revised sensitivity in `evaluate.py`. | Yes | 2026-07-18 |
+| TASK-009 | Add focused tests in `tests/test_relation_chain_ranking.py` and run the relevant test suite. | Yes | 2026-07-18 |
+| TASK-010 | Execute finalization, lock, inference, and evaluation in separate commands; preserve all JSON/Markdown outputs. | Yes | 2026-07-18 |
+| TASK-011 | Update public experiment documentation and the English LaTeX manuscript with only verified results and limitations. | Yes | 2026-07-18 |
 | TASK-012 | Compile the paper, inspect warnings, commit public code/docs, and push `main`. | | |
 
 ## 3. Alternatives

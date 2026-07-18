@@ -9,7 +9,9 @@ The evidence supports lexical first-stage retrieval with optional, separately va
 
 \subsection{What the graph contributes}
 
-Graph topology did not improve passage ranking because \texttt{CONTAINS}, \texttt{NEXT}, or \texttt{REFERENCES} does not prove relevance. Shortage paths answer a different question: which record names the event, NDC, ingredient, company, status, and reason. Such a path supports provenance, not causation. The six accepted paths establish feasibility only; direct database joins, path precision, abstention, entity linking, and temporal invalidation remain to be tested.
+Graph topology did not improve passage ranking because \texttt{CONTAINS}, \texttt{NEXT}, or \texttt{REFERENCES} does not prove textual relevance. Chain ranking answers a different question: which typed relations connect the entities named in a structured fact request. The exploratory test shows that explicit relation cues can identify shortage and regulatory chains, while API-supply branching remains difficult. The small and uncertain orientation increment also argues against describing canonical edge direction as natural-language reasoning.
+
+These chains support provenance, not causation. The test used questions derived from known relations and a fixed task projection, so it does not demonstrate general multi-hop inference. Direct joins, independently authored questions, answer-level correctness, abstention, entity linking, and temporal invalidation remain to be tested.
 
 \subsection{Implications for regulatory retrieval evaluation}
 
@@ -17,7 +19,7 @@ A favorable table slice motivated a selective gate, but two later sets failed to
 
 \subsection{Limitations}
 
-The final set contains 58 questions, and slice estimates remain unstable. One reviewer was the author and the other was a single external expert. Source-derived questions may retain identifiers that favor BM25; future evaluators should write independent information needs.
+The final text set contains 58 questions, and the strict graph set contains 28; slice estimates remain unstable. One reviewer was the author and the other was a single external expert. Source-derived text questions may retain identifiers that favor BM25, while relation-derived graph questions may favor lexical relation cues. Future evaluators should write independent information needs.
 
 The corpus contains 32 selected English documents and one frozen US shortage snapshot. It does not cover all jurisdictions or regulatory versions. The 10 July 2026 shortage state is historical, and the graph lacks tested temporal invalidation. MedCPT and Qwen3 were zero-shot single-model comparisons, not domain fine-tuning studies.
 

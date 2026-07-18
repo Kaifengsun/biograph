@@ -22,13 +22,19 @@
     "qwen_ndcg5": true,
     "qwen_hit5_delta": true,
     "qwen_mrr_delta": true,
-    "qwen_ndcg_delta": true
+    "qwen_ndcg_delta": true,
+    "graph_strict_n": true,
+    "graph_r1_hit1": true,
+    "graph_r1_hit5": true,
+    "graph_r1_mrr": true,
+    "graph_r1_m0_hit5_delta": true,
+    "graph_r1_direction_hit5_delta": true
   },
   "missing_bib_keys": [],
   "unaudited_bib_keys": [],
   "orphan_audit_keys": [],
   "duplicate_dois": [],
-  "cited_key_count": 33,
-  "bibliography_entry_count": 33,
+  "cited_key_count": 15,
+  "bibliography_entry_count": 34,
   "passed": true
 }

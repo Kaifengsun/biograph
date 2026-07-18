@@ -1,11 +1,11 @@
 \section{Results}
 \label{sec:results}
 
-\subsection{Historical holdout and graph feasibility}
+\subsection{Historical holdout and initial graph feasibility}
 
 On the 30-question principal holdout, top-down routing reached Hit@5 of 0.767 versus 0.700 for bottom-up dense retrieval. The adaptive method also reached 0.767, but its paired interval against text-only fusion included zero. Graph-constrained text retrieval reached only 0.100, and disabling graph access left adaptive aggregate metrics unchanged.
 
-The graph recovered all six accepted shortage-event paths within five candidates. Text retrieval answered only one of their six accompanying regulatory targets within five. This small result supports graph feasibility for explicit relations, not graph superiority or path precision.
+The graph recovered all six accepted shortage-event paths within five candidates. Text retrieval answered only one of their six accompanying regulatory targets within five. This initial result supported explicit-relation feasibility and motivated a more controlled chain-ranking test.
 
 \subsection{Enrichment ablation}
 
@@ -25,4 +25,13 @@ BM25 found Gold within its top 50 for all 58 questions. Qwen3 reranking raised H
 
 MedCPT gave the opposite result. Full-corpus dual-encoder retrieval reached Hit@5 of 0.345, MRR of 0.300, and nDCG@5 of 0.246. MedCPT cross-encoding of BM25's top 50 preserved candidate recall but reduced the three metrics to 0.603, 0.457, and 0.431. All paired 95\% intervals against BM25 were below zero for these metrics. The pattern held across single-clause, table, document-structure, and cross-document slices.
 
+\clearpage
 \input{tables/final_validation}
+
+\subsection{Exploratory evidence-chain ranking}
+
+Candidate generation contained the accepted chain for every question. On the 28 audit-qualified questions, R1 achieved exact-chain Hit@1 of 0.571, Hit@3 and Hit@5 of 0.786, and MRR of 0.663 (\Cref{tab:graphchain}). Its Hit@5 difference from M0 was 0.643 [0.464, 0.821]. Removing relation cues reduced Hit@5 to 0.143, whereas removing orientation reduced it to 0.750; the R1--direction-off difference was 0.036 [-0.071, 0.143]. Thus most measured gain came from matching relation phrases rather than the orientation term.
+
+Performance varied sharply by task. R1 recovered all shortage chains within one candidate and reached Hit@5 of 0.900 on regulatory logic, but only 0.375 on the eight retained API-supply questions. The transparent 30-question analysis, which includes the two ambiguous questions, gave Hit@5 of 0.733 and MRR of 0.626. Twelve queries reached the deterministic 50,000-candidate cap, but none aborted or lacked an anchor.
+
+\input{tables/relation_chain_ranking}

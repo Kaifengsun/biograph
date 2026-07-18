@@ -1,7 +1,7 @@
 \section{Experimental Design}
 \label{sec:experiments}
 
-The experiments ask whether hierarchy or graph constraints improve source passage ranking, whether index-side enrichment improves dense retrieval, whether a selective table gate survives independent confirmation, and whether modern biomedical or generative neural models improve a strong BM25 baseline. Structured path recovery remains a separate feasibility task. We make no state-of-the-art claim against open-domain RAG systems.
+The experiments ask whether hierarchy or graph constraints improve source passage ranking, whether index-side enrichment improves dense retrieval, whether a selective table gate survives independent confirmation, and whether modern biomedical or generative neural models improve a strong BM25 baseline. Structured chain ranking remains a separate task. We make no state-of-the-art claim against open-domain RAG systems.
 
 \subsection{Development, holdout, and confirmation sets}
 
@@ -16,3 +16,7 @@ Reviewer A was the author; Reviewer B had pharmaceutical, manufacturing, medical
 \subsection{Methods and metrics}
 
 Methods include BM25, raw dense retrieval, cumulative summary/question enrichment, hierarchical and graph constraints, RRF, the selective table gate, Qwen3 reranking, and MedCPT retrieval. We report Hit@1/3/5, MRR@50, and binary nDCG@5 \cite{jarvelin2002ndcg}. Ten thousand query-level bootstrap samples quantify paired uncertainty. Reviewer agreement uses exact agreement, Cohen's $\kappa$ \cite{cohen1960kappa}, and Gwet's AC1 \cite{gwet2008ac1}. Detailed tests, seeds, and failure criteria appear in the audit archive.
+
+\subsection{Exploratory graph-chain evaluation}
+
+Project feedback motivated a separate 30-question graph task: 10 shortage chains, 10 API-supply chains, and 10 regulatory-logic chains. Questions were constructed from known graph relations, reviewed independently, and jointly adjudicated; this makes the experiment exploratory rather than an estimate for arbitrary unseen graph questions. A final full-graph ambiguity audit found that two API questions admitted additional valid branches. We retained all 30 in the audit ledger and unfiltered analysis but excluded those two from the strict complete-chain metrics. The primary graph measures are exact-triple-set Hit@1/3/5 and MRR. Ten thousand category-stratified paired bootstrap samples compare R1 with its controls.
