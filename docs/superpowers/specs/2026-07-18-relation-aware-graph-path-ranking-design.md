@@ -101,8 +101,11 @@ Projection edges are traversable in either direction during enumeration, while
 canonical source and target are preserved as features. Starting from each
 anchor, deterministic breadth-first expansion adds one edge incident to any node
 already in the partial chain, rejects repeated canonical triples and cycles that
-add no node, and emits every connected chain of one to five edges. Adjacency and
-expansion are sorted by `(relation, source, target)`. Anchors are processed
+add no node, and emits every connected chain of one to five edges. The sole
+exception is a parallel edge with a different relation between a node pair
+already joined in the chain; this preserves multi-relational evidence such as
+one guideline being both a principles source and a definitions source. Adjacency
+and expansion are sorted by `(relation, source, target)`. Anchors are processed
 round-robin. The deterministic cap is the first 50,000 unique chains per
 question. There is no wall-clock truncation. A platform-independent safety limit
 of 2,000,000 attempted edge additions aborts the entire query as failed rather
