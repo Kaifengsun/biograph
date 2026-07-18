@@ -88,10 +88,15 @@ characters. Hyphens, underscores, slashes, and parentheses become spaces.
 Aliases are built without Gold from node `name`, the suffix of node `id`, and
 allowlisted scalar properties: `doc_id`, `package_ndc`, `generic_name`,
 `ingredient_name`, `company_name`, `reference_name`, `topic_name`, and `cas`.
+One normative document-name equivalence repairs a known internal identifier
+mismatch: node alias `ema gmp annex 11` also emits `eu gmp annex 11` and
+`eudralex volume 4 annex 11`. This does not alter the node or graph edge.
 Aliases shorter than three characters are discarded. Token-bounded exact
 matches are found in each question; contained matches are removed in favour of
 the longest span. Every node sharing a surviving alias is retained, so alias
-collisions are not resolved using Gold. Anchors are sorted by alias token count
+collisions are not resolved using Gold. Nodes with no incident edge in the fixed
+task-graph projection are ineligible because they cannot generate any candidate
+and must not consume the 64-anchor cap. Eligible anchors are sorted by alias token count
 descending, alias length descending, then node ID. At most 64 anchors are kept;
 truncation is logged.
 

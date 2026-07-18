@@ -10,6 +10,7 @@ from typing import Any
 from .common import nested_forbidden_keys, read_json, sha256_file, sha256_json, write_json
 from .config import (
     ALIAS_PROPERTY_ALLOWLIST,
+    ANCHOR_ALIAS_EQUIVALENCES,
     BOOTSTRAP_ITERATIONS,
     BOOTSTRAP_SEED,
     FORBIDDEN_INFERENCE_KEYS,
@@ -56,6 +57,9 @@ def build_lock(nodes: Path, edges: Path, inference: Path) -> dict[str, Any]:
         },
         "projection_relations": list(PROJECTED_RELATIONS),
         "alias_property_allowlist": list(ALIAS_PROPERTY_ALLOWLIST),
+        "anchor_alias_equivalences": {
+            key: list(value) for key, value in ANCHOR_ALIAS_EQUIVALENCES.items()
+        },
         "relation_aliases": {key: list(value) for key, value in RELATION_ALIASES.items()},
         "stop_words": sorted(STOP_WORDS),
         "weights": WEIGHTS,
@@ -82,6 +86,7 @@ def validate_lock(lock: dict[str, Any], nodes: Path, edges: Path, inference: Pat
         "implementation_hashes",
         "projection_relations",
         "alias_property_allowlist",
+        "anchor_alias_equivalences",
         "relation_aliases",
         "stop_words",
         "weights",

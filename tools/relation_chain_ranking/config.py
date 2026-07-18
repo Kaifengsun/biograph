@@ -26,6 +26,10 @@ ALIAS_PROPERTY_ALLOWLIST = (
     "cas",
 )
 
+ANCHOR_ALIAS_EQUIVALENCES = {
+    "ema gmp annex 11": ("eu gmp annex 11", "eudralex volume 4 annex 11"),
+}
+
 RELATION_ALIASES = {
     "AFFECTS_NDC_PRODUCT": ("affects ndc product", "package ndc", "ndc product"),
     "REPORTED_BY": ("reported by", "company reported", "reported"),
@@ -102,4 +106,3 @@ FORBIDDEN_INFERENCE_KEYS = frozenset(
         "consensus",
     }
 )
-

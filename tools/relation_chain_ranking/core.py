@@ -10,6 +10,7 @@ from typing import Any, Iterable
 from .common import chain_signature, normalized_phrase, normalized_tokens
 from .config import (
     ALIAS_PROPERTY_ALLOWLIST,
+    ANCHOR_ALIAS_EQUIVALENCES,
     MAX_ANCHORS,
     MAX_CANDIDATES,
     MAX_EDGE_ATTEMPTS,
@@ -95,6 +96,9 @@ def build_node_aliases(nodes: dict[str, dict[str, Any]]) -> tuple[
             tokens = normalized_tokens(value)
             if len("".join(tokens)) >= 3:
                 aliases.add(tokens)
+                phrase = " ".join(tokens)
+                for equivalent in ANCHOR_ALIAS_EQUIVALENCES.get(phrase, ()):
+                    aliases.add(normalized_tokens(equivalent))
         ordered = tuple(sorted(aliases, key=lambda x: (-len(x), -sum(map(len, x)), x)))
         node_aliases[node_id] = ordered
         for alias in ordered:
@@ -187,7 +191,7 @@ def detect_anchors(question: str, graph: GraphData) -> list[dict[str, Any]]:
     seen = set()
     for row in anchors:
         key = row["node_id"]
-        if key not in seen:
+        if key not in seen and graph.adjacency.get(key):
             seen.add(key)
             unique.append(row)
     return unique[:MAX_ANCHORS]

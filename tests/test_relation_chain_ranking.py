@@ -49,9 +49,19 @@ def test_inference_forbidden_keys_are_detected_recursively() -> None:
 
 def test_anchor_detection_keeps_longest_alias_and_colliding_nodes() -> None:
     graph = tiny_graph()
+    graph.nodes["chunk:shadow"] = {
+        "id": "chunk:shadow",
+        "label": "DocChunk",
+        "name": "Alpha Drug",
+        "properties": {},
+    }
+    node_aliases, alias_index = build_node_aliases(graph.nodes)
+    graph.node_aliases = node_aliases
+    graph.alias_index = alias_index
     anchors = detect_anchors("Which API is linked to Alpha Drug?", graph)
     assert anchors[0]["node_id"] == "drug:a"
     assert anchors[0]["alias"] == "alpha drug"
+    assert "chunk:shadow" not in {row["node_id"] for row in anchors}
 
 
 def test_enumeration_supports_branching_and_parallel_semantic_edges() -> None:
@@ -105,3 +115,27 @@ def test_missing_gold_has_zero_metrics() -> None:
     assert row["rank"] is None
     assert row["hit_at_5"] == 0.0
     assert row["mrr"] == 0.0
+
+
+def test_eu_gmp_annex_alias_repairs_internal_ema_identifier() -> None:
+    nodes = {
+        "regdoc:ema_gmp_annex_11": {
+            "id": "regdoc:ema_gmp_annex_11",
+            "label": "RegulatoryDocument",
+            "name": "EudraLex",
+            "properties": {"doc_id": "ema_gmp_annex_11"},
+        },
+        "topic:x": {"id": "topic:x", "label": "Topic", "name": "Systems", "properties": {}},
+    }
+    key = ("regdoc:ema_gmp_annex_11", "COVERS_TOPIC", "topic:x")
+    edges = {key: EdgeRecord(*key, ("p",))}
+    node_aliases, alias_index = build_node_aliases(nodes)
+    graph = GraphData(
+        nodes,
+        edges,
+        {"regdoc:ema_gmp_annex_11": (key,), "topic:x": (key,)},
+        node_aliases,
+        alias_index,
+    )
+    anchors = detect_anchors("What does EU GMP Annex 11 cover?", graph)
+    assert [row["node_id"] for row in anchors] == ["regdoc:ema_gmp_annex_11"]
