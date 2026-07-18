@@ -36,6 +36,7 @@ def git_commit() -> str:
 def build_lock(nodes: Path, edges: Path, inference: Path) -> dict[str, Any]:
     config_path = Path(__file__).with_name("config.py")
     spec_path = ROOT / "docs/superpowers/specs/2026-07-18-relation-aware-graph-path-ranking-design.md"
+    implementation_files = sorted(Path(__file__).parent.glob("*.py"))
     return {
         "schema_version": "1.0",
         "status": "locked_before_graph_chain_scores",
@@ -47,6 +48,9 @@ def build_lock(nodes: Path, edges: Path, inference: Path) -> dict[str, Any]:
             "inference_queries": sha256_file(inference),
             "config_py": sha256_file(config_path),
             "approved_spec": sha256_file(spec_path),
+        },
+        "implementation_hashes": {
+            path.name: sha256_file(path) for path in implementation_files
         },
         "projection_relations": list(PROJECTED_RELATIONS),
         "alias_property_allowlist": list(ALIAS_PROPERTY_ALLOWLIST),
@@ -73,6 +77,7 @@ def validate_lock(lock: dict[str, Any], nodes: Path, edges: Path, inference: Pat
     expected = build_lock(nodes, edges, inference)
     comparable_keys = [
         "input_hashes",
+        "implementation_hashes",
         "projection_relations",
         "alias_property_allowlist",
         "relation_aliases",

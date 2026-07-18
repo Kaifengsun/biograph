@@ -216,7 +216,7 @@ def enumerate_candidates(question: str, graph: GraphData) -> EnumerationResult:
         node_id = row["node_id"]
         anchor_ids.append(node_id)
         queues.append(deque([(tuple(), frozenset({node_id}), {node_id: 0}, 0.0)]))
-    seen_per_anchor = [set() for _ in queues]
+    best_state_orientation: dict[str, float] = {}
     candidates: dict[str, Candidate] = {}
     per_anchor = CounterLike()
     attempts = 0
@@ -257,11 +257,6 @@ def enumerate_candidates(question: str, graph: GraphData) -> EnumerationResult:
                     forward = float(depths.get(source, 10**9) <= depths.get(target, 10**9))
                 next_forward = forward_sum + forward
                 signature = chain_signature(next_edges)
-                if signature in seen_per_anchor[index]:
-                    continue
-                seen_per_anchor[index].add(signature)
-                if len(next_edges) < MAX_EDGES:
-                    queue.append((next_edges, next_nodes, next_depths, next_forward))
                 orientation = 2.0 * (next_forward / len(next_edges)) - 1.0
                 provenance_fraction = sum(graph.edges[key].has_provenance for key in next_edges) / len(next_edges)
                 candidate = candidates.get(signature)
@@ -281,6 +276,11 @@ def enumerate_candidates(question: str, graph: GraphData) -> EnumerationResult:
                 else:
                     candidate.orientation = max(candidate.orientation, orientation)
                     candidate.anchors.add(anchor_ids[index])
+                previous_orientation = best_state_orientation.get(signature, -2.0)
+                if orientation > previous_orientation + 1e-12:
+                    best_state_orientation[signature] = orientation
+                    if len(next_edges) < MAX_EDGES:
+                        queue.append((next_edges, next_nodes, next_depths, next_forward))
             if aborted or cap_reached:
                 break
         if aborted or cap_reached:
