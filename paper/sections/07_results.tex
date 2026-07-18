@@ -1,40 +1,28 @@
 \section{Results}
 \label{sec:results}
 
-\subsection{Principal holdout}
+\subsection{Historical holdout and graph feasibility}
 
-\Cref{tab:principal} reports the 30-query principal holdout. Top-down routing reached Hit@5 of 0.767, compared with 0.700 for bottom-up dense retrieval. Text-only RRF remained at 0.700. The full adaptive method reached Hit@1 of 0.333, Hit@3 of 0.733, Hit@5 of 0.767, MRR of 0.518, and nDCG@5 of 0.504.
+On the 30-question principal holdout, top-down routing reached Hit@5 of 0.767 versus 0.700 for bottom-up dense retrieval. The adaptive method also reached 0.767, but its paired interval against text-only fusion included zero. Graph-constrained text retrieval reached only 0.100, and disabling graph access left adaptive aggregate metrics unchanged.
 
-Relative to text-only RRF, the adaptive method increased Hit@5 by 0.067, with a 95\% interval of [0.000, 0.167]. Two queries changed from failure to success and none changed in the opposite direction, but the Holm-adjusted exact paired $p$-value was 0.500. MRR increased by 0.032 and nDCG@5 by 0.038; neither adjusted test reached 0.05. The result is descriptive and does not establish superiority.
-
-Disabling graph access left all aggregate adaptive metrics unchanged. The graph-constrained text path alone had Hit@5 of 0.100. Unconditional three-path RRF reached 0.733, below top-down routing and the adaptive method. Graph connectivity therefore provided no observed aggregate gain for source-chunk ranking in this configuration.
-
-The structured path task produced a different result. Each of six supply-chain questions had an accepted shortage-event, NDC-product, and active-ingredient path, plus a separate regulatory-text target. The graph recovered all six structured paths within its first five candidates, giving success@5 of 1.000. The corresponding text Hit@5 was only 0.167. This six-query feasibility result shows that the graph can expose the target relations; it does not estimate path precision, unanchored-query error, or advantage over direct database lookup.
+The graph recovered all six accepted shortage-event paths within five candidates. Text retrieval answered only one of their six accompanying regulatory targets within five. This small result supports graph feasibility for explicit relations, not graph superiority or path precision.
 
 \subsection{Enrichment ablation}
 
-\Cref{tab:ablation} reports the independent ablation. BM25 achieved the best aggregate Hit@5 (0.867), MRR (0.726), and nDCG@5 (0.662). The full adaptive method reached 0.800, 0.608, and 0.571. Its Hit@5 difference from BM25 was -0.067, with a 95\% interval of [-0.233, 0.100] and Holm-adjusted $p=0.688$. The result does not support an aggregate advantage for the adaptive method.
+BM25 led the independent enrichment ablation with Hit@5 of 0.867, MRR of 0.726, and nDCG@5 of 0.662 (\Cref{tab:ablation}). Adding chunk summaries changed little. Generated question profiles reduced MRR by 0.171 and nDCG@5 by 0.167 versus the raw dense index; both paired adjusted tests gave $p=0.024$. Mapping generated items back to source chunks preserved provenance but did not prevent competition for nearest-neighbor positions.
 
-Adding chunk summaries in R2 did not change Hit@5 and changed MRR by -0.002 relative to R1. Adding generated question profiles in R3 reduced Hit@5 by 0.167, MRR by 0.171, and nDCG@5 by 0.167. The MRR interval was [-0.295, -0.051], the nDCG@5 interval was [-0.292, -0.047], and both adjusted $p$-values were 0.024. R4 left Hit@5 and nDCG@5 unchanged relative to R3 and changed MRR by 0.001 ($p=0.952$). Mapping generated items back to source chunks preserved evidential validity but did not prevent those items from competing for a limited number of nearest-neighbor positions.
+\subsection{Adjudicated evaluation}
 
-The eight table questions showed a narrower descriptive pattern. The full adaptive method reached Hit@5 of 1.000, MRR of 0.854, and nDCG@5 of 0.891, compared with BM25 values of 0.875, 0.644, and 0.695. R1 and R2 also reached table Hit@5 of 1.000, whereas R3 and R4 fell to 0.750. The small slice suggested that routing or table intent might help, but did not support the table-summary profiles themselves.
+The reviewers agreed on 96.7\% of question-status and evidence-completeness labels. Core binary passage agreement was 0.941, with $\kappa=0.792$ (95\% interval [0.718, 0.862]) and AC1$=0.918$ ([0.880, 0.949]). Joint adjudication left no unresolved item.
 
-\subsection{Confirmation and adjudicated evaluation}
+On the one-shot 58-question run, BM25 achieved Hit@5 of 0.948, MRR of 0.820, and nDCG@5 of 0.800. The selective gate reached 0.897, 0.787, and 0.757, failing its prespecified superiority rule.
 
-On the 30-query RQ5 confirmation set, BM25 reached Hit@5 of 0.900, MRR of 0.798, and nDCG@5 of 0.785. The selective gate reached 0.867, 0.790, and 0.774. Its MRR difference was -0.009 with a 95\% interval of [-0.092, 0.067] and adjusted $p=1.000$. The prespecified success conditions were not met. An unconditional source-level RRF reached MRR of 0.832 but reduced Hit@5 to 0.833.
-
-The two RQ6 reviewers agreed exactly on 96.7\% of question-status labels and 96.7\% of evidence-completeness labels. The five-class passage labels had exact agreement of 0.663, $\kappa=0.488$, and AC1=0.599. After merging \texttt{Sufficient} and \texttt{Required Component} into core Gold, exact agreement rose to 0.941, Cohen's $\kappa$ to 0.792 (query-cluster 95\% interval [0.718, 0.862]), and AC1 to 0.918 (95\% interval [0.880, 0.949]). Positive agreement was 0.827, macro Jaccard was 0.801, and macro F1 was 0.853. Joint adjudication resolved 31 core binary disagreements and one missed label, with no unresolved item.
-
-The first four rows of \Cref{tab:final58} report the one-shot formal 58-query run. BM25 achieved Hit@5 of 0.948, MRR of 0.820, and nDCG@5 of 0.800. The selective gate reached 0.897, 0.787, and 0.757. The gate-minus-BM25 differences were -0.052 for Hit@5 (95\% interval [-0.121, 0.000]), -0.033 for MRR ([-0.083, 0.008], adjusted $p=0.215$), and -0.043 for nDCG@5 ([-0.095, -0.002], adjusted $p=0.199$). The formal run again rejected the gate's prespecified superiority condition.
-
-\input{tables/principal_holdout}
 \input{tables/enrichment_ablation}
+
+\subsection{Neural boundary experiments}
+
+BM25 found Gold within its top 50 for all 58 questions. Qwen3 reranking raised Hit@5 to 0.983, MRR to 0.832, and nDCG@5 to 0.817. The paired differences were 0.034 [0.000, 0.086], 0.012 [-0.082, 0.104], and 0.017 [-0.058, 0.093], respectively. The point estimates improved, but the intervals did not establish a general gain.
+
+MedCPT gave the opposite result. Full-corpus dual-encoder retrieval reached Hit@5 of 0.345, MRR of 0.300, and nDCG@5 of 0.246. MedCPT cross-encoding of BM25's top 50 preserved candidate recall but reduced the three metrics to 0.603, 0.457, and 0.431. All paired 95\% intervals against BM25 were below zero for these metrics. The pattern held across single-clause, table, document-structure, and cross-document slices.
+
 \input{tables/final_validation}
-
-\subsection{Supplementary Qwen3 reranking}
-
-BM25 retrieved at least one Gold passage within its top 50 for all 58 adjudicated queries, so the reranker's candidate-recall ceiling was 1.000. The locked Qwen3 reranker increased Hit@5 from 0.948 to 0.983, MRR@50 from 0.820 to 0.832, and nDCG@5 from 0.800 to 0.817. Hit@1 remained 0.724. \Cref{tab:qwen_delta} reports paired differences.
-
-The Hit@5 difference was 0.034 with a bootstrap interval of [0.000, 0.086]. MRR@50 and nDCG@5 differences were 0.012 and 0.017, with intervals [-0.082, 0.104] and [-0.058, 0.093]. The point estimates are positive overall, but the intervals do not establish a general ranking improvement. Slice results were mixed: Qwen3 improved document-structure MRR from 0.802 to 0.889 and single-clause MRR from 0.806 to 0.844, while cross-document MRR fell from 0.842 to 0.728 and table MRR from 0.846 to 0.827. These slice sizes range from 10 to 20 and support error analysis only.
-
-\input{tables/qwen_delta}

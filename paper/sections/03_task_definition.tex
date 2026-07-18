@@ -1,7 +1,7 @@
 \section{Task Definition}
 \label{sec:task}
 
-Let the regulatory corpus be $\mathcal{D}=\{d_1,\ldots,d_m\}$. Each document $d$ is parsed into an ordered tree $T_d=(V_d,E_d)$ whose nodes include headings, sections, source chunks, and tables. Let $C$ denote the set of source chunks. The heterogeneous evidence graph is $\mathcal{G}=(V,E,\tau_V,\tau_E)$, where node and edge types distinguish document structure, generated summaries, regulatory topics, shortage events, NDC products, active ingredients, and manufacturers.
+Each document is parsed into an ordered tree of headings, sections, source chunks, and tables. Let $C$ denote the source chunks and $\mathcal{G}=(V,E,\tau_V,\tau_E)$ the typed evidence graph.
 
 For a natural-language query $q$, the text task returns a ranking
 \begin{equation}
@@ -9,10 +9,10 @@ R_C(q)=(c_1,c_2,\ldots), \qquad c_i\in C.
 \end{equation}
 Only source chunks confirmed by human reviewers, denoted $C_q^*$, count as relevant. A generated question, section summary, table summary, document node, or shortage entity cannot satisfy a text Gold judgment.
 
-The structured task returns a set of paths
+The structured task returns paths
 \begin{equation}
 P_G(q)=\{p_1,p_2,\ldots\}, \qquad p_i=(v_1,e_1,v_2,\ldots,v_k),
 \end{equation}
-with edge direction and source metadata preserved. A path succeeds when an accepted sequence of structured nodes appears in the first $K$ candidates. Structured nodes do not enter Hit@$K$, reciprocal rank, or nDCG for text retrieval.
+with edge direction and source metadata preserved. A path succeeds when an accepted node and edge sequence appears in the first $K$ candidates. Structured nodes never enter text Hit@$K$, reciprocal rank, or nDCG.
 
-This separation produces two inspectable outputs. The first is a citable regulatory passage with its document and hierarchy. The second is a provenance-bearing statement such as shortage event $\rightarrow$ NDC product $\rightarrow$ active ingredient, optionally linked to a manufacturer and reported reason. A downstream answer may display both, but it must not merge their evidential roles.
+The interface may display a passage and a path together, but their evidential roles remain explicit.

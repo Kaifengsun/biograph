@@ -1,34 +1,18 @@
 \section{Experimental Design}
 \label{sec:experiments}
 
-\subsection{Research questions}
-
-The experiments address seven questions. RQ1 measures bottom-up, top-down, and fused text retrieval. RQ2 tests unconditional and gated graph access for source-chunk ranking. RQ3 asks whether the graph can recover six manually accepted shortage-event paths. RQ4 compares BM25 with dense retrieval and cumulative index-side enrichment. RQ5 tests a source-level selective table gate on a new confirmation set. RQ6 repeats that comparison on a new, independently double-annotated and jointly adjudicated pool. RQ7, added after RQ6, asks whether a locked modern reranker can improve ordering within BM25's top 50. RQ7 is labelled supplementary and post hoc throughout.
-
-We did not reproduce NaiveRAG, GraphRAG-Global, LightRAG, HippoRAG, or proprietary systems. We also did not compare graph traversal against direct openFDA queries or relational joins. The study therefore makes no cross-system state-of-the-art claim.
+The experiments ask whether hierarchy or graph constraints improve source passage ranking, whether index-side enrichment improves dense retrieval, whether a selective table gate survives independent confirmation, and whether modern biomedical or generative neural models improve a strong BM25 baseline. Structured path recovery remains a separate feasibility task. We make no state-of-the-art claim against open-domain RAG systems.
 
 \subsection{Development, holdout, and confirmation sets}
 
-The initial 60-query development set informed retrieval rules. A separate 30-query principal holdout covered 10 single-clause, six table, four document-structure, four cross-document, and six supply-chain-path questions. The methods and Gold evidence were frozen before the holdout run. The path questions required both structured nodes and regulatory chunks; only chunks entered text metrics.
-
-RQ4 used a different 30-query ablation set: 10 single-clause, eight table, six document-structure, and six cross-document questions. The questions were written from previously unused frozen passages and tables without consulting retrieval rankings. Twenty-two were confirmed in the first review; eight were narrowed and confirmed in a second round. Its Gold chunks do not overlap the earlier development or principal-holdout Gold sets. Once RQ4 motivated a table gate, this set became observed development data.
-
-RQ5 combined 90 observed queries for parameter selection, then evaluated the frozen gate on another 30-query confirmation set. Candidate passages were shuffled and the review workbook hid method names, scores, ranks, and true chunk identifiers. Twenty-four questions were confirmed directly; six were narrowed and confirmed in a second pass. ``Method blinded'' refers to the review interface, not to double-blind study conduct.
+Three earlier 30-question sets supported principal holdout, enrichment ablation, and gate confirmation. Their methods, source evidence, and review rounds were frozen before the corresponding run. Once a set informed a later rule, we treated it as observed development data. Full pool composition and historical results remain in the supplementary archive.
 
 \subsection{Independent annotation and adjudication}
 
-RQ6 introduced 60 new questions: 20 single-clause, 15 table, 15 document-structure, and 10 cross-document questions. Normalized question strings were deduplicated against all prior pools. Each question received 8--12 candidate passages drawn from source anchors, BM25, the raw dense index, hierarchical routing, and same-document hard negatives. The workbook concealed the candidate source, method, score, rank, chunk identifier, and source-anchor identity.
+The final pool contained 60 new questions: 20 single-clause, 15 table, 15 document-structure, and 10 cross-document items. Each received 8--12 candidates from source anchors, BM25, dense retrieval, hierarchy, and same-document hard negatives. The workbook concealed method, score, rank, identifier, and source-anchor identity.
 
-Reviewer A was the author. Reviewer B had pharmaceutical, manufacturing, medical, and regulatory expertise. Both reviewed the same passages in separately randomized orders and did not compare labels before submission. Question labels were \texttt{Answerable}, \texttt{Needs Revision}, or \texttt{Invalid}; evidence-completeness labels were \texttt{Complete}, \texttt{Incomplete}, or \texttt{Unclear}. Passage labels were \texttt{Sufficient}, \texttt{Required Component}, \texttt{Context Only}, \texttt{Not Supporting}, or \texttt{Unclear}. The first two passage labels form the core binary Gold set used for retrieval metrics.
-
-The original labels remain unchanged in the audit archive. Joint adjudication addressed question-status differences, core Gold disagreements, and missed labels. Two table questions ended with incomplete evidence and were retained in the audit ledger but excluded under the prespecified rule. The formal run therefore contained 58 questions and no unresolved judgments.
+Reviewer A was the author; Reviewer B had pharmaceutical, manufacturing, medical, and regulatory expertise. They worked independently on separately randomized candidates. Five passage labels distinguished sufficient evidence, required components, context, non-support, and uncertainty; the first two formed binary Gold. Joint adjudication preserved original labels, resolved all disagreements, and excluded two incomplete table questions under the prespecified rule, leaving 58.
 
 \subsection{Methods and metrics}
 
-The principal holdout compares bottom-up dense retrieval, top-down routing, graph-constrained text retrieval, text-only RRF, unconditional three-path RRF, and adaptive variants. RQ4 compares BM25 with four cumulative dense indexes: R1 contains source chunks; R2 adds chunk summaries; R3 adds 3,917 generated question profiles; and R4 adds 311 table-summary profiles. BM25+R4 uses equal-weight RRF. RQ5 and RQ6 compare context-matched BM25, R1, unconditional source-level RRF, and the selective table gate. RQ7 compares the same BM25 top-50 ranking with its Qwen3 reranking.
-
-Text metrics are Hit@1, Hit@3, Hit@5, reciprocal rank, and binary nDCG@5; RQ7 also reports Hit@50 and MRR@50. nDCG rewards relevant chunks near the top of a ranking \cite{jarvelin2002ndcg}. Structured-path recovery uses success@5 and remains separate from text metrics.
-
-Confidence intervals use 10,000 query-level bootstrap samples. Paired Hit@5 comparisons use McNemar's exact test \cite{mcnemar1947correlated}; MRR and nDCG@5 use the paired Wilcoxon signed-rank test \cite{wilcoxon1945rank}. Holm's procedure controls the familywise error rate across each three-metric comparison family \cite{holm1979multiple}. RQ5's prespecified primary outcome was the selective gate's MRR difference from BM25. Success required a difference of at least 0.03, a bootstrap lower bound above zero, Holm-adjusted $p<0.05$, and no Hit@5 decrease greater than 0.033.
-
-Inter-reviewer reporting includes exact agreement, Cohen's $\kappa$ \cite{cohen1960kappa}, and Gwet's AC1 \cite{gwet2008ac1}. Core Gold agreement also includes positive agreement, macro Jaccard, and macro F1. Query-cluster bootstrap intervals preserve within-query passage dependence.
+Methods include BM25, raw dense retrieval, cumulative summary/question enrichment, hierarchical and graph constraints, RRF, the selective table gate, Qwen3 reranking, and MedCPT retrieval. We report Hit@1/3/5, MRR@50, and binary nDCG@5 \cite{jarvelin2002ndcg}. Ten thousand query-level bootstrap samples quantify paired uncertainty. Reviewer agreement uses exact agreement, Cohen's $\kappa$ \cite{cohen1960kappa}, and Gwet's AC1 \cite{gwet2008ac1}. Detailed tests, seeds, and failure criteria appear in the audit archive.

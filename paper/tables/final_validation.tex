@@ -1,21 +1,22 @@
 \begin{table}[t]
 \centering
 \begin{threeparttable}
-\caption{Results on the 58 adjudicated queries.}
+\caption{Source-chunk retrieval on 58 adjudicated questions.}
 \label{tab:final58}
 \begin{tabular}{lccc}
 \toprule
 Method & Hit@5 & MRR & nDCG@5 \\
 \midrule
 Context-matched BM25 & 0.948 & 0.820 & 0.800 \\
-R1 source-chunk dense & 0.759 & 0.574 & 0.545 \\
-Unconditional source RRF & 0.897 & 0.795 & 0.761 \\
+Youtu source-chunk dense & 0.759 & 0.574 & 0.545 \\
 Selective table gate & 0.897 & 0.787 & 0.757 \\
-Qwen3 reranker (post hoc) & \textbf{0.983} & \textbf{0.832} & \textbf{0.817} \\
+Qwen3 over BM25 top 50$^{*}$ & \textbf{0.983} & \textbf{0.832} & \textbf{0.817} \\
+MedCPT dual encoder$^{*}$ & 0.345 & 0.300 & 0.246 \\
+MedCPT over BM25 top 50$^{*}$ & 0.603 & 0.457 & 0.431 \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[flushleft]\footnotesize
-\item The first four methods were evaluated in the one-shot formal comparison. Qwen3-Reranker-0.6B was locked later and reranked only BM25's frozen top 50; it is supplementary and post hoc. Paired uncertainty intervals are reported in \Cref{tab:qwen_delta}.
+\item $^{*}$Feedback-motivated locked extensions on already observed Gold questions. Qwen3 and the MedCPT cross-encoder rerank BM25's frozen top 50; MedCPT dual-encoder retrieval searches all 2,478 chunks.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}

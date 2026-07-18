@@ -3,38 +3,30 @@
 
 \subsection{Bottom-up source-chunk retrieval}
 
-The bottom-up path searches an index of source-linked representations. The frozen dense encoder is \texttt{tencent/Youtu-Embedding}, used without task-specific fine-tuning. An auxiliary summary or hypothetical question that matches the query is immediately mapped back to its source chunk; duplicate chunks retain their best rank. FAISS performs vector search. The source chunk, not the generated representation, is returned to the reviewer.
-
-The lexical baseline applies BM25 to a common payload consisting of parent context, heading text, and the first 2,000 characters of the source chunk. Tokenization lowercases alphanumeric terms. The fixed parameters are $k_1=1.2$ and $b=0.75$ \cite{robertson2009bm25}. Dense and lexical methods use the same 2,478 source identifiers.
+The bottom-up path searches source-linked representations. Youtu-Embedding supplies the frozen dense vectors; generated summaries and questions map back to source chunks before deduplication. BM25 indexes parent context, heading, and the first 2,000 chunk characters with $k_1=1.2$ and $b=0.75$ \cite{robertson2009bm25}. Both methods rank the same 2,478 identifiers.
 
 \subsection{Top-down document routing}
 
-The top-down path first retrieves from an index containing source representations and generated question profiles. Candidate ranks vote for documents using reciprocal-rank contributions. The two highest-scoring documents define a restricted search space. The system then returns to the source-chunk index, ranks chunks within those documents, and exposes the path from the document root through the parent section to each candidate. Direct children of a routed section can enter the candidate set with lower weight.
-
-This path uses generated questions to decide where to search, not what to cite. The final ranking contains only source chunks. The design resembles hierarchical retrieval in its use of multiple levels, while retaining the original document tree instead of building a learned clustering tree \cite{sarthi2024raptor}.
+Candidate ranks vote for documents through reciprocal-rank contributions. The two leading documents define a restricted chunk search, and returned chunks retain their root-to-section path. Generated profiles choose where to search, never what to cite. Unlike learned clustering trees, this route preserves the source document hierarchy \cite{sarthi2024raptor}.
 
 \subsection{Bounded graph traversal}
 
-The graph engine produces two outputs. Structured paths start from recognized shortage events, NDCs, active ingredients, products, or manufacturers and preserve relation direction and provenance. Experimental graph-constrained text paths start from a document or topic anchor, traverse a bounded neighborhood, and use the reachable documents as a filter before ranking source chunks.
-
-Traversal uses a deterministic bounded breadth-first search. The formal configuration limits path depth to four, expands at most 800 states per query, and caps neighbors per node. For an NDC- or shortage-specific question, the system can return a path of the form shortage event $\rightarrow$ NDC product $\rightarrow$ active ingredient together with manufacturer, availability, reason, and update fields. These records remain outside the text ranking.
+Deterministic breadth-first traversal has depth four and expands at most 800 states. Structured paths preserve edge direction, node properties, and provenance. A separate experimental route uses graph-reachable documents to constrain text retrieval. Structured records remain outside text metrics.
 
 \subsection{Fusion and adaptive variants}
 
-Bottom-up, top-down, and graph-constrained text rankings can be fused by RRF \cite{cormack2009rrf}. For source chunk $c$,
+Bottom-up, top-down, and graph-constrained rankings use reciprocal-rank fusion. For source chunk $c$,
 \begin{equation}
 s_{\mathrm{RRF}}(c)=\sum_{r\in\{b,t,g\}}\frac{w_r}{k_0+\operatorname{rank}_r(c)},
 \end{equation}
-where $k_0=60$, $w_b=w_t=1$, and $w_g=0.5$ when graph gating is active. The graph gate requires a direct structured record, an explicit regulatory-document anchor, or agreement between graph-reachable documents and the text routes. Otherwise $w_g=0$.
-
-The adaptive method adds bounded metadata gains for explicit document matches and table intent. The gains rerank only existing source candidates. We report the unconditional and adaptive variants because a gate that sounds plausible can still damage ranking.
+where $k_0=60$, $w_b=w_t=1$, and $w_g=0.5$ only for a direct graph record, explicit document anchor, or text-graph agreement. Bounded metadata gains handle explicit document and table intent.
 
 \subsection{BM25-anchored selective reranking}
 
-The first selective reranker combines source-level BM25 and dense ranks. It returns BM25 unchanged unless the query has explicit table intent or the union of the two top-five lists contains at least two distinct table chunks. When enabled, it assigns
+The selective reranker returns BM25 unchanged unless the query explicitly requests a table or two distinct table chunks occur in the combined top-five lists. When enabled, it assigns
 \begin{equation}
 s(c)=\frac{1}{60+r_{\mathrm{BM25}}(c)}+\frac{1}{60+r_{\mathrm{dense}}(c)}+\frac{0.25I_{\mathrm{table}}(c)}{61}.
 \end{equation}
-Missing ranks contribute zero. Ties resolve by BM25 rank, dense rank, and chunk identifier. The gate depth, support threshold, and table weight were selected on 90 observed queries and then frozen.
+Missing ranks contribute zero. The gate depth, support threshold, and table weight were selected on 90 observed queries and frozen.
 
-After the 58-query adjudicated evaluation, we added one supplementary post hoc neural condition to address whether a modern cross-encoder-style reranker could improve ordering inside a strong lexical candidate set. Qwen3-Reranker-0.6B reranks the fixed BM25 top 50 with the instruction ``Given a pharmaceutical regulatory question, retrieve a source passage that directly supports the answer.'' The model uses BF16, a maximum sequence length of 1,024 tokens, batch size eight, deterministic inference, and normalized probabilities of the official \texttt{yes}/\texttt{no} relevance tokens \cite{zhang2025qwen3embedding}. The model, code, candidates, corpus, Gold package, and settings were hashed and committed before any formal score was inspected. Because the same adjudicated queries had already been used to compare earlier methods, this analysis is supplementary and post hoc rather than confirmatory.
+Two later locked extensions test semantic reordering without fine-tuning. Qwen3-Reranker-0.6B scores BM25's fixed top 50 with its official yes/no relevance formulation, BF16 precision, and 1,024-token input \cite{zhang2025qwen3embedding}. MedCPT uses its official query encoder (64 tokens) and article encoder (512 tokens) with unnormalized dot product over all 2,478 chunks; its cross-encoder separately reranks the same BM25 top 50 at 512 tokens \cite{jin2023medcpt}. Exact model revisions, files, payloads, code, and seeds were hashed before MedCPT scores were observed. Both extensions are feedback-motivated supplementary analyses because the 58 questions were already observed.
