@@ -103,9 +103,11 @@ anchor, deterministic breadth-first expansion adds one edge incident to any node
 already in the partial chain, rejects repeated canonical triples and cycles that
 add no node, and emits every connected chain of one to five edges. Adjacency and
 expansion are sorted by `(relation, source, target)`. Anchors are processed
-round-robin. The cap is 50,000 unique chains per question and 60 seconds;
-pre-cap estimates, retained counts, cap/time flags, and per-anchor counts are
-recorded.
+round-robin. The deterministic cap is the first 50,000 unique chains per
+question. There is no wall-clock truncation. A platform-independent safety limit
+of 2,000,000 attempted edge additions aborts the entire query as failed rather
+than scoring a partial result. Retained counts, cap/abort flags, attempted
+expansions, and per-anchor counts are recorded.
 
 A candidate signature is the lexicographically sorted set of canonical
 `(source, relation, target)` triples; traversal order and edge-instance IDs are
@@ -134,20 +136,46 @@ count. The matched relation-blind score is:
 
 `Core(q,c) = 1.00*F1tok(q,c) + 0.10*Prov(c) - 0.02*(m-1)`.
 
-Relation aliases are declared for every projected relation. They include split
-relation labels and fixed variants such as `reported by`, `manufacturer`, `NDC`,
-`active ingredient`, `API`, `supplied by`, `supplier`, `covers`, `supersedes`,
-`replaces`, `uses principles from`, `foundation`, `complements`, `interprets`,
-`definition from`, and `compliance`. Phrase matching is token-bounded,
-longest-first, and non-overlapping. Let `C(q)` be relation types with a matched
-alias and `R(c)` the candidate relation-type set. If `C(q)` is empty, all relation
-features are zero. Otherwise:
+The normative relation alias map is:
+
+- `AFFECTS_NDC_PRODUCT`: `affects ndc product`, `package ndc`, `ndc product`;
+- `REPORTED_BY`: `reported by`, `company reported`, `reported`;
+- `HAS_ACTIVE_INGREDIENT`: `has active ingredient`, `active ingredient`,
+  `ingredient`;
+- `CONTAINS_API`: `contains api`, `linked api`, `api is linked`;
+- `SUPPLIED_BY`: `supplied by`, `manufacturers supply`, `manufacturer supply`,
+  `suppliers`, `supplier`;
+- `COVERS_TOPIC`: `covers topic`, `topic does`, `topic is`, `linked topic`;
+- `SUPERSEDES`: `supersedes`, `superseding`, `replaces`, `replacement`;
+- `USES_PRINCIPLES_FROM`: `uses principles from`, `source of principles`,
+  `principle dependencies`, `supplies principles`, `foundation`;
+- `COMPLEMENTS`: `complements`, `complementary`, `complement`;
+- `INTERPRETS`: `interprets`, `interpreted by`, `interpretation`;
+- `APPLIES_DEFINITION_FROM`: `applies definition from`,
+  `source of applied definitions`, `applied definitions`;
+- `REQUIRES_COMPLIANCE_WITH`: `requires compliance with`,
+  `ensure full compliance`, `compliance with`, `direct readers to consult`.
+
+The normative stop list is: `a`, `an`, `and`, `are`, `as`, `at`, `be`, `both`,
+`by`, `does`, `for`, `from`, `how`, `in`, `is`, `it`, `of`, `on`, `or`, `that`,
+`the`, `their`, `then`, `this`, `through`, `to`, `was`, `what`, `when`, `which`,
+`who`, `with`.
+
+Phrase matching is token-bounded, longest-first, and non-overlapping. Let `C(q)`
+be relation types with a matched alias and `R(c)` the candidate relation-type
+set. If `C(q)` is empty, relation coverage and precision are zero. Otherwise:
 
 - `Coverage = |C(q) intersect R(c)| / |C(q)|`;
 - `Precision = number of candidate triples whose type is in C(q) / m`;
-- `Forward = canonical-forward cued triples / all cued triples`, maximized over
-  retained anchor traversals;
-- `Direction = 2*Forward - 1`, or zero when no cued triple exists.
+- `ForwardAll = canonical-source-to-target traversals / all traversed triples`,
+  maximized over retained matched-anchor traversals;
+- `Orientation = 2*ForwardAll - 1`.
+
+`Orientation` is deliberately described as **anchor-relative canonical
+orientation**, not proof that the question's full natural-language semantics
+have been resolved. It measures whether a candidate can be expanded from an
+explicitly mentioned anchor mainly along, rather than against, declared edge
+directions. It is independent of relation-alias matching.
 
 ### M0: matched relation-blind ranking
 
@@ -159,7 +187,7 @@ removed.
 
 ### R1: relation-aware ranking
 
-`R1(q,c) = Core(q,c) + 2.00*Coverage + 0.50*Precision + 0.50*Direction`.
+`R1(q,c) = Core(q,c) + 2.00*Coverage + 0.50*Precision + 0.50*Orientation`.
 
 Ties are resolved by edge count then signature. `method_lock.json` is a
 machine-readable copy of the lexicon, stop list, constants, allowlists, caps,
@@ -167,20 +195,21 @@ hashes, and Git commit.
 
 ### Prespecified ablations
 
-- **Cue-off:** `Core + 0.50*Direction`.
+- **Cue-off:** `Core + 0.50*Orientation`; no relation aliases are consulted.
 - **Direction-off:** `Core + 2.00*Coverage + 0.50*Precision`.
 - **M0:** `Core`, with both relation components removed.
 
 All use the identical candidate set. R1 versus direction-off isolates the
-directional scoring term, while R1 versus cue-off isolates lexical relation cues.
-B0 is a traversal reference, not a matched causal comparison.
+anchor-relative orientation term, while R1 versus cue-off isolates lexical
+relation-cue coverage and precision. B0 is a traversal reference, not a matched
+causal comparison.
 
 ## Metrics and uncertainty
 
 Each question has exactly one accepted canonical triple-set chain. Primary
-metrics are exact-chain Hit@1, Hit@3, Hit@5, and MRR. Hit@k is one when Gold rank
-is at most `k` and zero otherwise, including when fewer than `k` candidates
-exist. Reciprocal rank is `1/rank`, or zero when absent. Candidate-generation
+metrics are exact-chain Hit@1, Hit@3, Hit@5, and MRR. For `N` ranked candidates,
+Hit@k is one when Gold is present among the first `min(k,N)` candidates and zero
+otherwise. Reciprocal rank is `1/rank`, or zero when absent. Candidate-generation
 recall is the fraction of all 30 questions whose Gold signature occurs anywhere
 in the retained candidates. Metrics are unweighted query macros overall and
 within each fixed 10-question category.
