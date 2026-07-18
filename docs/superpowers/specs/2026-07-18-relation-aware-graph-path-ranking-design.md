@@ -1,142 +1,215 @@
-# Relation-Aware Graph Path Ranking: Design Specification
+# Relation-Aware Graph Evidence-Chain Ranking: Design Specification
 
 ## Status and scope
 
-This is a feedback-driven supplementary experiment. It was designed after the
-main text-retrieval evaluation and after project-group feedback requested a
-deeper graph assessment. It is not a preregistered or confirmatory comparison.
-The experiment evaluates whether relation direction and relation semantics help
-rank auditable graph paths; it does not treat graph nodes as source passages and
-does not alter any reported passage-retrieval Gold labels.
+This is a feedback-driven **exploratory** supplementary experiment designed
+after the main text-retrieval evaluation and project-group feedback. It is not a
+preregistered or confirmatory comparison. Because the investigators had already
+seen the questions and reviewed chains before this design was locked, no result
+will be described as blind or confirmatory. The lock prevents tuning after
+scores, not knowledge of the evaluation pool during initial method design.
 
 The frozen graph is
 `artifacts/regulatory_evidence_graph/deepseek-v4-pro-v4-build5-regulatory-fda`
-(7,578 nodes, 15,237 directed edges). The evaluation pool contains 30
-independently reviewed questions: 10 shortage chains, 10 drug/API/supplier
-chains, and 10 regulatory-logic chains. Joint adjudication ended with one
-originally confirmed regulatory question, five wording revisions that retain
-their paths, and no exclusions or unresolved decisions.
+(7,578 nodes, 15,237 directed edges). The pool contains 30 independently
+reviewed questions: 10 shortage chains, 10 drug/API/supplier chains, and 10
+regulatory-logic chains. Joint adjudication ended with one originally confirmed
+regulatory question, five wording revisions that retain their chains, and no
+exclusions or unresolved decisions.
+
+The experiment evaluates whether relation cues and edge direction help rank
+auditable graph evidence chains. It does not treat graph nodes as source passages
+and does not alter passage-retrieval Gold labels.
 
 ## Approaches considered
 
-1. **Transparent relation-aware ranking (selected).** Generate bounded paths and
-   score relation direction, question-to-relation cue agreement, node-text
-   agreement, and provenance completeness. This is auditable and suitable for a
-   30-question set.
+1. **Transparent relation-aware ranking (selected).** Enumerate bounded evidence
+   chains and score relation cues and direction with fixed equations.
 2. **Supervised path ranker (rejected).** Thirty questions are insufficient for
-   credible training and held-out model selection; leakage and overfitting would
-   dominate the result.
-3. **LLM path selection (not a primary condition).** An LLM could narrate path
-   choice, but stochasticity and prompt sensitivity would weaken the clean
-   comparison requested by the feedback.
+   credible training and model selection.
+3. **LLM path selection (not primary).** Prompt sensitivity and stochasticity
+   would weaken the requested controlled comparison.
 
-## Frozen Gold construction
+## Gold finalization and public audit layer
 
-The original independent Reviewer A and Reviewer B workbooks remain immutable.
-The six-row final consensus workbook is stored privately because it contains
-audit annotations. A deterministic finalization script will produce a
-machine-readable 30-question ledger containing:
+The original Reviewer A and Reviewer B workbooks remain immutable. A
+deterministic finalizer produces a 30-question ledger containing final wording,
+accepted canonical directed edge triples, accepted nodes, answer, provenance,
+review resolution, and hashes of the graph, registry, returned reviews, and
+final consensus workbook. For 24 questions without a status disagreement, the
+reviewed wording and chain are retained. For the six adjudicated questions,
+final wording and answers come from the consensus workbook. `Revise` means that
+the revised question and unchanged supported chain enter Gold.
 
-- final question wording;
-- accepted node sequence and directed edge sequence;
-- answer and provenance sources;
-- original reviewer labels and adjudication resolution;
-- hashes of the graph files, registry, both returned review files, and final
-  consensus workbook.
+A sanitized public adjudication ledger discloses final wording, accepted edge
+triples and nodes, final status, and whether wording changed. Reviewer identities,
+free-text notes, and local paths are omitted. It is sufficient to rerun evaluation
+from the finalized Gold layer. Hashes and an access-on-request audit statement
+link it to the private workbooks.
 
-For the 24 questions without status disagreement, the original reviewed
-question and path are retained. For the six adjudicated questions, final wording
-and answers come from the consensus workbook. A `Revise` decision means that the
-revised question and unchanged supported path enter Gold; it is not a rejection.
+## Sanitized inference input and Gold isolation
+
+Finalization writes two physically separate inputs. `inference_queries.json`
+contains only question ID, category, original wording, final wording, and a
+wording-changed flag. It contains no answer, target, node, edge, reviewer,
+adjudication, or Gold field. Candidate generation and ranking commands can read
+only this sanitized file, the frozen graph, and `method_lock.json`. Evaluation
+is a separate command that joins serialized rankings to the Gold ledger. Tests
+fail if forbidden Gold keys occur in inference input.
+
+The method is committed after the Gold ledger because this is explicitly an
+exploratory feedback response. After `method_lock.json` is written, aliases,
+weights, graph projection, normalization, cap, and tie-breaking cannot change.
+A sensitivity run uses the five original and five revised wordings under the
+same lock and is descriptive only.
 
 ## Candidate generation
 
-Candidate generation must not receive the Gold target node or Gold edge
-sequence. Query anchors are detected only by normalized exact or alias matching
-between question text and frozen node names/identifiers. If multiple anchors
-match, all are retained. From each anchor, the generator enumerates directed
-simple paths of one to three hops. Incoming traversal is disabled in the primary
-experiment because direction is part of the evaluated semantics.
+The retrieval unit is a rooted connected **evidence chain**, not necessarily a
+linear path. Accepted chains may branch to several suppliers or references. A
+chain contains one to five canonical directed edge triples and their incident
+nodes. Gold fields are unavailable to the generator.
 
-Administrative hierarchy relations (`NEXT`, `SUMMARIZES`, `CONTAINS`,
-`PARENT_OF`, `HAS_SECTION_SUMMARY`, and `HAS_DOCUMENT_SUMMARY`) are excluded
-unless they are explicitly cued by a question. This prevents thousands of
-document-navigation edges from crowding out supply-chain and regulatory
-relations. Duplicate node-and-relation sequences are collapsed. A deterministic
-lexicographic order breaks all remaining ties. Candidate count and Gold-path
-coverage are reported for every query. A question with no detectable anchor or
-no generated Gold path remains in the denominator and is reported as a candidate
-generation failure.
+### Fixed task-graph projection
 
-## Compared ranking conditions
+All conditions share one query-independent projection containing:
+`AFFECTS_NDC_PRODUCT`, `REPORTED_BY`, `HAS_ACTIVE_INGREDIENT`, `CONTAINS_API`,
+`SUPPLIED_BY`, `COVERS_TOPIC`, `SUPERSEDES`, `USES_PRINCIPLES_FROM`,
+`COMPLEMENTS`, `INTERPRETS`, `APPLIES_DEFINITION_FROM`, and
+`REQUIRES_COMPLIANCE_WITH`. This is a declared task boundary, not a per-question
+semantic filter. Results estimate ranking inside a supply/regulatory evidence
+view, not arbitrary search over all graph edges. An unfiltered one- and two-edge
+coverage diagnostic is reported separately and is not a ranking condition.
+
+### Anchor normalization
+
+Text is Unicode NFKC-normalized, lowercased, and split on non-alphanumeric
+characters. Hyphens, underscores, slashes, and parentheses become spaces.
+Aliases are built without Gold from node `name`, the suffix of node `id`, and
+allowlisted scalar properties: `doc_id`, `package_ndc`, `generic_name`,
+`ingredient_name`, `company_name`, `reference_name`, `topic_name`, and `cas`.
+Aliases shorter than three characters are discarded. Token-bounded exact
+matches are found in each question; contained matches are removed in favour of
+the longest span. Every node sharing a surviving alias is retained, so alias
+collisions are not resolved using Gold. Anchors are sorted by alias token count
+descending, alias length descending, then node ID. At most 64 anchors are kept;
+truncation is logged.
+
+### Enumeration and identity
+
+Projection edges are traversable in either direction during enumeration, while
+canonical source and target are preserved as features. Starting from each
+anchor, deterministic breadth-first expansion adds one edge incident to any node
+already in the partial chain, rejects repeated canonical triples and cycles that
+add no node, and emits every connected chain of one to five edges. Adjacency and
+expansion are sorted by `(relation, source, target)`. Anchors are processed
+round-robin. The cap is 50,000 unique chains per question and 60 seconds;
+pre-cap estimates, retained counts, cap/time flags, and per-anchor counts are
+recorded.
+
+A candidate signature is the lexicographically sorted set of canonical
+`(source, relation, target)` triples; traversal order and edge-instance IDs are
+not part of identity. Parallel edges with the same triple are merged and their
+provenance records are unioned by canonical JSON hash. Duplicates generated from
+multiple anchors are collapsed; scoring uses the maximum feature value over
+their valid anchor traversals. Gold matching uses the same triple-set identity.
+A question with no anchor or no generated Gold chain remains in every metric
+denominator and is an explicit candidate-generation failure.
+
+## Compared conditions
 
 ### B0: untyped bounded traversal
 
-The baseline ranks candidates by hop count, then by the stable lexicographic
-path identifier. It ignores relation names, question wording, node names, and
-provenance. This represents basic bounded graph traversal rather than a learned
-or semantic reasoner.
+B0 ranks by edge count, then signature. It ignores relation names, question
+wording, node names, direction, and provenance.
 
-### B1: node-text ranking
+### Feature definitions
 
-This diagnostic condition adds token overlap between the question and candidate
-node names/properties but still ignores relation labels. It separates gains from
-identifying relevant entities from gains due specifically to relation semantics.
+Question and node tokens use anchor normalization plus a fixed English stop list
+stored in the lock. Candidate node text is the union of aliases for incident
+nodes. `F1tok(q,c)` is set-token F1 between non-stopword question tokens and
+candidate node tokens. `Prov(c)` is the fraction of canonical triples for which
+at least one merged edge record has a nonempty provenance object. Let `m` be edge
+count. The matched relation-blind score is:
+
+`Core(q,c) = 1.00*F1tok(q,c) + 0.10*Prov(c) - 0.02*(m-1)`.
+
+Relation aliases are declared for every projected relation. They include split
+relation labels and fixed variants such as `reported by`, `manufacturer`, `NDC`,
+`active ingredient`, `API`, `supplied by`, `supplier`, `covers`, `supersedes`,
+`replaces`, `uses principles from`, `foundation`, `complements`, `interprets`,
+`definition from`, and `compliance`. Phrase matching is token-bounded,
+longest-first, and non-overlapping. Let `C(q)` be relation types with a matched
+alias and `R(c)` the candidate relation-type set. If `C(q)` is empty, all relation
+features are zero. Otherwise:
+
+- `Coverage = |C(q) intersect R(c)| / |C(q)|`;
+- `Precision = number of candidate triples whose type is in C(q) / m`;
+- `Forward = canonical-forward cued triples / all cued triples`, maximized over
+  retained anchor traversals;
+- `Direction = 2*Forward - 1`, or zero when no cued triple exists.
+
+### M0: matched relation-blind ranking
+
+`M0(q,c) = Core(q,c)`.
+
+M0 uses exactly the same candidates, normalization, node text, provenance,
+length term, and tie-breaking as R1. Only relation-cue and direction terms are
+removed.
 
 ### R1: relation-aware ranking
 
-The selected method uses a fixed additive score with components that are saved
-before evaluation:
+`R1(q,c) = Core(q,c) + 2.00*Coverage + 0.50*Precision + 0.50*Direction`.
 
-- relation-cue agreement between normalized question phrases and relation
-  aliases;
-- direction agreement for asymmetric relation cues;
-- node-text overlap;
-- provenance completeness for every edge;
-- a small length prior favouring the shortest path that satisfies the cues;
-- penalties for an uncued relation and for reversed asymmetric semantics.
+Ties are resolved by edge count then signature. `method_lock.json` is a
+machine-readable copy of the lexicon, stop list, constants, allowlists, caps,
+hashes, and Git commit.
 
-Relation aliases are derived from relation names and a manually declared,
-domain-transparent lexicon (for example `supersedes`, `complements`,
-`supplied by`, `active ingredient`, `reported by`, and `affects NDC product`).
-No weights or aliases may be changed after aggregate or per-question scores are
-observed. Exact weights, aliases, graph hashes, Gold hashes, and software version
-are written to `method_lock.json` before the evaluation command runs.
+### Prespecified ablations
 
-## Metrics and analysis
+- **Cue-off:** `Core + 0.50*Direction`.
+- **Direction-off:** `Core + 2.00*Coverage + 0.50*Precision`.
+- **M0:** `Core`, with both relation components removed.
 
-The primary metrics are exact accepted-chain Hit@1, Hit@3, Hit@5, and MRR. A
-candidate is correct only when its directed node and relation sequence matches
-an accepted Gold path. Candidate-generation recall is reported separately so a
-ranking gain cannot hide missing candidates. Results are reported overall and
-for the three prespecified categories.
+All use the identical candidate set. R1 versus direction-off isolates the
+directional scoring term, while R1 versus cue-off isolates lexical relation cues.
+B0 is a traversal reference, not a matched causal comparison.
 
-Paired query-level differences compare R1 against B0 and B1. Because the pool is
-small and was created from the frozen graph, the analysis emphasizes exact
-counts, paired bootstrap confidence intervals, and failure categories rather
-than significance claims. The report must disclose that questions were designed
-to exercise known graph relations and therefore do not estimate performance on
-arbitrary unseen graph questions.
+## Metrics and uncertainty
 
-## Leakage controls and failure handling
+Each question has exactly one accepted canonical triple-set chain. Primary
+metrics are exact-chain Hit@1, Hit@3, Hit@5, and MRR. Hit@k is one when Gold rank
+is at most `k` and zero otherwise, including when fewer than `k` candidates
+exist. Reciprocal rank is `1/rank`, or zero when absent. Candidate-generation
+recall is the fraction of all 30 questions whose Gold signature occurs anywhere
+in the retained candidates. Metrics are unweighted query macros overall and
+within each fixed 10-question category.
 
-- Candidate generation cannot access `edges`, `nodes`, `draft_answer`, or final
-  answer fields from the Gold registry.
-- Evaluation code receives Gold paths only after candidate rankings have been
-  serialized.
-- Method-lock and inference files are separate; hashes verify both.
-- Missing provenance, duplicate identifiers, malformed edges, anchor failures,
-  and candidate-cap truncation fail loudly or appear as explicit error records.
-- Original review workbooks and final consensus are never overwritten.
-- The experiment does not modify canonical graph artifacts.
+Paired differences compare R1 with B0, M0, cue-off, and direction-off. The
+paired bootstrap resamples questions within category: 10 draws with replacement
+per category, concatenated to 30; 10,000 replicates; NumPy `PCG64` seed
+`20260718`; percentile 95% intervals at 2.5% and 97.5%. No p-values or
+superiority claim are made. The report discloses that questions were designed
+from known graph relations and do not estimate arbitrary unseen graph questions.
+
+## Failure handling and leakage controls
+
+- Candidate generation and rankers read only sanitized queries, graph, and lock.
+- Evaluation receives Gold only after rankings are serialized.
+- Method-lock and inference files are separate and hashed.
+- Missing provenance, duplicate IDs, malformed edges, anchor failures, cap/time
+  truncation, and ambiguous aliases fail loudly or become explicit records.
+- Original reviews, consensus workbook, and canonical graph are never modified.
+- A validation step checks whether each final question uniquely identifies its
+  accepted answer within the frozen graph; ambiguous items are reported and are
+  not silently edited.
 
 ## Deliverables
 
-- final 30-question Gold ledger and integrity manifest;
+- sanitized final Gold ledger and integrity manifest;
 - `method_lock.json` written before score inspection;
-- candidate rankings for B0, B1, and R1;
-- aggregate, category, paired-bootstrap, and failure-analysis JSON/Markdown;
-- focused unit tests for finalization, anchor detection, path enumeration,
-  direction scoring, and metric calculation;
-- a concise manuscript update that labels the experiment supplementary and
-  feedback-driven.
+- B0, M0, cue-off, direction-off, and R1 rankings;
+- aggregate, category, bootstrap, sensitivity, and failure-analysis reports;
+- tests for finalization, anchor detection, chain enumeration, duplicate-edge
+  aggregation, direction scoring, ambiguity checks, and metrics;
+- a concise manuscript update labelled supplementary and exploratory.
