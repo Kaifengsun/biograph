@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
@@ -20,6 +21,16 @@ def metric_row(ranking: list[str], gold_signature: str) -> dict[str, float | int
         rank = ranking.index(gold_signature) + 1
     except ValueError:
         rank = None
+    return {
+        "rank": rank,
+        "hit_at_1": float(rank is not None and rank <= 1),
+        "hit_at_3": float(rank is not None and rank <= 3),
+        "hit_at_5": float(rank is not None and rank <= 5),
+        "mrr": 0.0 if rank is None else 1.0 / rank,
+    }
+
+
+def metric_from_rank(rank: int | None) -> dict[str, float | int | None]:
     return {
         "rank": rank,
         "hit_at_1": float(rank is not None and rank <= 1),
@@ -100,22 +111,34 @@ def ambiguity_audit(gold: dict[str, Any], graph: Any) -> list[dict[str, Any]]:
 
 
 def evaluate(
-    gold: dict[str, Any], rankings: dict[str, Any], graph: Any, method_lock_path: Path
+    gold: dict[str, Any],
+    rankings: dict[str, Any],
+    ranking_dir: Path,
+    graph: Any,
+    method_lock_path: Path,
 ) -> dict[str, Any]:
     if rankings.get("method_lock_sha256") != sha256_file(method_lock_path):
         raise ValueError("ranking output does not match method lock")
     gold_by_id = {row["review_id"]: row for row in gold.get("questions", [])}
-    ranking_by_id = {row["review_id"]: row for row in rankings.get("queries", [])}
+    ranking_by_id = {row["review_id"]: row for row in rankings.get("query_files", [])}
     if len(gold_by_id) != 30 or set(gold_by_id) != set(ranking_by_id):
         raise ValueError("Gold and rankings must contain the same 30 questions")
     per_query = []
     sensitivity = []
     for review_id in sorted(gold_by_id):
         gold_row = gold_by_id[review_id]
-        ranking_row = ranking_by_id[review_id]
+        ranking_file_row = ranking_by_id[review_id]
+        ranking_path = ranking_dir / ranking_file_row["file"]
+        if sha256_file(ranking_path) != ranking_file_row["sha256"]:
+            raise ValueError(f"ranking file hash mismatch: {ranking_path}")
+        ranking_row = read_json(ranking_path)
         final_variant = ranking_row["variants"]["final"]
+        gold_candidate_id = hashlib.sha256(
+            gold_row["gold_signature"].encode("utf-8")
+        ).hexdigest()
+        rank_record = final_variant["rank_positions"].get(gold_candidate_id, {})
         metrics = {
-            method: metric_row(final_variant["rankings"][method], gold_row["gold_signature"])
+            method: metric_from_rank(rank_record.get(method))
             for method in METHODS
         }
         per_query.append(
@@ -133,6 +156,7 @@ def evaluate(
         )
         if gold_row["wording_changed"]:
             original_variant = ranking_row["variants"]["original"]
+            original_rank_record = original_variant["rank_positions"].get(gold_candidate_id, {})
             sensitivity.append(
                 {
                     "review_id": review_id,
@@ -141,9 +165,7 @@ def evaluate(
                     "original_question": gold_row["original_question"],
                     "final": metrics,
                     "original": {
-                        method: metric_row(
-                            original_variant["rankings"][method], gold_row["gold_signature"]
-                        )
+                        method: metric_from_rank(original_rank_record.get(method))
                         for method in METHODS
                     },
                 }
@@ -269,6 +291,7 @@ def main() -> None:
     result = evaluate(
         read_json(args.gold),
         read_json(args.rankings),
+        args.rankings.parent,
         load_graph(args.nodes, args.edges),
         args.method_lock,
     )

@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import subprocess
 from pathlib import Path
 from typing import Any
 
-from .common import nested_forbidden_keys, read_json, sha256_file, write_json
+from .common import nested_forbidden_keys, read_json, sha256_file, sha256_json, write_json
 from .config import (
     ALIAS_PROPERTY_ALLOWLIST,
     BOOTSTRAP_ITERATIONS,
@@ -109,23 +111,40 @@ def rank_variant(question: str, graph: Any) -> dict[str, Any]:
                 "scores": scores,
             }
         )
-    rankings: dict[str, list[str]] = {
-        "b0": [row["signature"] for row in candidate_rows],
-    }
+    rankings: dict[str, list[dict[str, Any]]] = {"b0": list(candidate_rows)}
     for method in METHODS:
         if method == "b0":
             continue
-        rankings[method] = [
-            row["signature"]
-            for row in sorted(
-                candidate_rows,
-                key=lambda row: (
-                    -float(row["scores"][method]),
-                    len(row["edges"]),
-                    row["signature"],
-                ),
-            )
+        rankings[method] = sorted(
+            candidate_rows,
+            key=lambda row: (
+                -float(row["scores"][method]),
+                len(row["edges"]),
+                row["signature"],
+            ),
+        )
+    rank_positions: dict[str, dict[str, int]] = {}
+    signature_by_id: dict[str, str] = {}
+    for method, ordered in rankings.items():
+        for rank, row in enumerate(ordered, 1):
+            candidate_id = hashlib.sha256(row["signature"].encode("utf-8")).hexdigest()
+            existing = signature_by_id.setdefault(candidate_id, row["signature"])
+            if existing != row["signature"]:
+                raise ValueError("candidate SHA-256 collision")
+            rank_positions.setdefault(candidate_id, {})[method] = rank
+    top_candidates = {
+        method: [
+            {
+                "candidate_id": hashlib.sha256(row["signature"].encode("utf-8")).hexdigest(),
+                "edges": row["edges"],
+                "features": row["features"],
+                "score": None if method == "b0" else row["scores"][method],
+                "rank": rank,
+            }
+            for rank, row in enumerate(ordered[:20], 1)
         ]
+        for method, ordered in rankings.items()
+    }
     return {
         "question": question,
         "anchor_matches": enumeration.anchors,
@@ -134,8 +153,10 @@ def rank_variant(question: str, graph: Any) -> dict[str, Any]:
         "candidate_cap_reached": enumeration.candidate_cap_reached,
         "work_limit_aborted": enumeration.work_limit_aborted,
         "per_anchor_emitted": enumeration.per_anchor_emitted,
-        "candidates": candidate_rows,
-        "rankings": rankings,
+        "candidate_id_scheme": "sha256(canonical triple-set signature)",
+        "candidate_set_sha256": sha256_json(sorted(rank_positions)),
+        "rank_positions": rank_positions,
+        "top_candidates": top_candidates,
     }
 
 
@@ -144,6 +165,7 @@ def run_inference(
     edges: Path,
     inference_path: Path,
     lock_path: Path,
+    output_dir: Path,
 ) -> dict[str, Any]:
     inference = read_json(inference_path)
     forbidden = nested_forbidden_keys(inference, FORBIDDEN_INFERENCE_KEYS)
@@ -154,6 +176,7 @@ def run_inference(
     lock = read_json(lock_path)
     validate_lock(lock, nodes, edges, inference_path)
     graph = load_graph(nodes, edges)
+    output_dir.mkdir(parents=True, exist_ok=True)
     rows = []
     for index, query in enumerate(inference["queries"], 1):
         print(f"[{index:02d}/30] {query['review_id']} final", flush=True)
@@ -161,12 +184,22 @@ def run_inference(
         if query["wording_changed"]:
             print(f"         {query['review_id']} original sensitivity", flush=True)
             variants["original"] = rank_variant(query["original_question"], graph)
+        query_payload = {
+            "schema_version": "1.0",
+            "review_id": query["review_id"],
+            "category": query["category"],
+            "wording_changed": query["wording_changed"],
+            "variants": variants,
+        }
+        query_path = output_dir / f"{query['review_id']}.json"
+        write_json(query_path, query_payload)
         rows.append(
             {
                 "review_id": query["review_id"],
                 "category": query["category"],
                 "wording_changed": query["wording_changed"],
-                "variants": variants,
+                "file": query_path.name,
+                "sha256": sha256_file(query_path),
             }
         )
     return {
@@ -175,7 +208,7 @@ def run_inference(
         "experiment_classification": lock["experiment_classification"],
         "method_lock_sha256": sha256_file(lock_path),
         "query_count": len(rows),
-        "queries": rows,
+        "query_files": rows,
     }
 
 
@@ -190,16 +223,17 @@ def main() -> None:
         child.add_argument("--inference", type=Path, required=True)
     lock_parser.add_argument("--output", type=Path, required=True)
     run_parser.add_argument("--lock", type=Path, required=True)
-    run_parser.add_argument("--output", type=Path, required=True)
+    run_parser.add_argument("--output-dir", type=Path, required=True)
+    run_parser.add_argument("--manifest", type=Path, required=True)
     args = parser.parse_args()
     if args.command == "lock":
         payload = build_lock(args.nodes, args.edges, args.inference)
         write_json(args.output, payload)
         print(f"method locked at {args.output}")
         return
-    payload = run_inference(args.nodes, args.edges, args.inference, args.lock)
-    write_json(args.output, payload)
-    print(f"serialized rankings at {args.output}")
+    payload = run_inference(args.nodes, args.edges, args.inference, args.lock, args.output_dir)
+    write_json(args.manifest, payload)
+    print(f"serialized ranking manifest at {args.manifest}")
 
 
 if __name__ == "__main__":
