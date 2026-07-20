@@ -44,6 +44,14 @@ def main() -> None:
 
     doi_values = [value.lower() for value in re.findall(r"doi\s*=\s*\{([^}]+)\}", bib_text, re.I)]
     duplicate_dois = sorted({doi for doi in doi_values if doi_values.count(doi) > 1})
+    figure_pngs = [
+        "figures/dual_path_framework.png",
+        "figures/retrieval_findings_summary.png",
+    ]
+    figure_svgs = [
+        "figures/dual_path_framework.svg",
+        "figures/retrieval_findings_summary.svg",
+    ]
     checks: dict[str, bool] = {
         "all_citations_have_bib_entries": citation_keys <= bib_keys,
         "all_bib_entries_are_audited": bib_keys <= audit_keys,
@@ -61,7 +69,9 @@ def main() -> None:
             all_tex,
             re.I,
         ) is None,
-        "figures_intentionally_deferred": "Figures are intentionally deferred" in (PAPER / "README.md").read_text(encoding="utf-8"),
+        "required_figures_present": all((PAPER / path).is_file() for path in figure_pngs),
+        "required_figure_sources_present": all((PAPER / path).is_file() for path in figure_svgs),
+        "required_figures_referenced": all(path in all_tex for path in figure_pngs),
     }
 
     result_checks: dict[str, bool] = {}

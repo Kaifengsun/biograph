@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1120" viewBox="0 0 2200 1120">
+  <defs>
+    <style>
+      .heading { font-family: Arial, Helvetica, sans-serif; font-size: 25px; font-weight: 700; letter-spacing: 1.4px; fill: #30343b; }
+      .lane-title { font-family: Arial, Helvetica, sans-serif; font-size: 32px; font-weight: 700; fill: #20242a; }
+      .box-title { font-family: "Times New Roman", Times, serif; font-size: 34px; fill: #15171a; }
+      .box-sub { font-family: Arial, Helvetica, sans-serif; font-size: 23px; fill: #454b54; }
+      .aux-title { font-family: "Times New Roman", Times, serif; font-size: 28px; fill: #15171a; }
+      .note { font-family: Arial, Helvetica, sans-serif; font-size: 22px; fill: #454b54; }
+      .analyst-title { font-family: "Times New Roman", Times, serif; font-size: 30px; fill: #15171a; }
+      .analyst-sub { font-family: Arial, Helvetica, sans-serif; font-size: 20px; fill: #454b54; }
+      .analyst-note { font-family: Arial, Helvetica, sans-serif; font-size: 19px; fill: #454b54; }
+      .top-box { fill: #eef0fa; stroke: #252a31; stroke-width: 3; }
+      .bottom-box { fill: #edf6ef; stroke: #252a31; stroke-width: 3; }
+      .output-box { fill: #ffffff; stroke: #252a31; stroke-width: 4; }
+      .arrow { stroke: #252a31; stroke-width: 3.2; fill: none; marker-end: url(#arrowhead); }
+      .guide { stroke: #7a8088; stroke-width: 2; stroke-dasharray: 8 8; fill: none; }
+      .query-arrow { stroke: #555b64; stroke-width: 2.6; stroke-dasharray: 7 6; fill: none; marker-end: url(#arrowhead); }
+    </style>
+    <marker id="arrowhead" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L12,6 L0,12 z" fill="#252a31"/>
+    </marker>
+  </defs>
+
+  <rect width="2200" height="1000" fill="#ffffff"/>
+
+  <text x="270" y="78" text-anchor="middle" class="heading">SOURCE</text>
+  <text x="710" y="78" text-anchor="middle" class="heading">EVIDENCE ORGANIZATION</text>
+  <text x="1190" y="78" text-anchor="middle" class="heading">RETRIEVAL</text>
+  <text x="1615" y="78" text-anchor="middle" class="heading">RETURNED EVIDENCE</text>
+  <text x="1990" y="78" text-anchor="middle" class="heading">ANALYST VIEW</text>
+
+  <text x="70" y="150" class="lane-title">Regulatory text evidence</text>
+  <line x1="70" y1="168" x2="2135" y2="168" stroke="#c5c9d0" stroke-width="2"/>
+
+  <rect x="70" y="210" width="400" height="180" rx="18" class="top-box"/>
+  <text x="270" y="275" text-anchor="middle" class="box-title">
+    <tspan x="270">Frozen regulatory corpus</tspan>
+  </text>
+  <text x="270" y="325" text-anchor="middle" class="box-sub">
+    <tspan x="270">ICH · FDA · EMA · WHO</tspan>
+  </text>
+
+  <rect x="520" y="210" width="380" height="180" rx="18" class="top-box"/>
+  <text x="710" y="265" text-anchor="middle" class="box-title">
+    <tspan x="710">Document hierarchy</tspan>
+  </text>
+  <text x="710" y="315" text-anchor="middle" class="box-sub">
+    <tspan x="710">Document → Section</tspan>
+    <tspan x="710" dy="34">→ Chunk / Table</tspan>
+  </text>
+
+  <rect x="970" y="210" width="440" height="180" rx="18" class="top-box"/>
+  <text x="1190" y="255" text-anchor="middle" class="box-title">
+    <tspan x="1190">Text evidence retrieval</tspan>
+  </text>
+  <text x="1190" y="302" text-anchor="middle" class="box-sub">
+    <tspan x="1190">BM25 over source chunks</tspan>
+    <tspan x="1190" dy="31">Optional neural reranking</tspan>
+    <tspan x="1190" dy="31">evaluated separately</tspan>
+  </text>
+
+  <rect x="1440" y="210" width="350" height="180" rx="18" class="output-box"/>
+  <text x="1615" y="270" text-anchor="middle" class="box-title">
+    <tspan x="1615">Citable text evidence</tspan>
+  </text>
+  <text x="1615" y="320" text-anchor="middle" class="box-sub">
+    <tspan x="1615">Verbatim passage or table</tspan>
+    <tspan x="1615" dy="34">+ hierarchy context as needed</tspan>
+  </text>
+
+  <path d="M470 300 H520" class="arrow"/>
+  <path d="M900 300 H970" class="arrow"/>
+  <path d="M1410 300 H1440" class="arrow"/>
+
+  <rect x="520" y="435" width="380" height="130" rx="18" fill="#fafafa" stroke="#656b73" stroke-width="2.5" stroke-dasharray="8 7"/>
+  <text x="710" y="474" text-anchor="middle" class="aux-title" style="font-size:24px">
+    <tspan x="710">Optional source-grounded aids</tspan>
+    <tspan x="710" dy="32">Summaries · synthetic questions</tspan>
+  </text>
+  <text x="710" y="545" text-anchor="middle" class="box-sub">Evaluated only; never evidence</text>
+  <path d="M710 390 V435" class="query-arrow"/>
+  <path d="M900 500 H930 V350 H970" class="query-arrow"/>
+
+  <rect x="970" y="435" width="440" height="130" rx="18" class="output-box"/>
+  <text x="1190" y="483" text-anchor="middle" class="box-title">Analyst evidence request</text>
+  <text x="1190" y="530" text-anchor="middle" class="box-sub">Task specifies text, graph, or both</text>
+  <path d="M1190 435 V390" class="query-arrow"/>
+  <path d="M1190 565 V675" class="query-arrow"/>
+
+  <text x="70" y="615" class="lane-title">Structured supply-chain facts</text>
+  <line x1="70" y1="633" x2="2135" y2="633" stroke="#c5c9d0" stroke-width="2"/>
+
+  <rect x="70" y="675" width="400" height="180" rx="18" class="bottom-box"/>
+  <text x="270" y="740" text-anchor="middle" class="box-title">
+    <tspan x="270">Frozen openFDA snapshot</tspan>
+  </text>
+  <text x="270" y="790" text-anchor="middle" class="box-sub">
+    <tspan x="270">Drug-shortage records</tspan>
+  </text>
+
+  <rect x="520" y="675" width="380" height="180" rx="18" class="bottom-box"/>
+  <text x="710" y="730" text-anchor="middle" class="box-title">
+    <tspan x="710">Evidence graph</tspan>
+  </text>
+  <text x="710" y="780" text-anchor="middle" class="box-sub">
+    <tspan x="710">Shortage events · NDC products</tspan>
+    <tspan x="710" dy="34">Active ingredients · manufacturers</tspan>
+  </text>
+
+  <rect x="970" y="675" width="440" height="180" rx="18" class="bottom-box"/>
+  <text x="1190" y="730" text-anchor="middle" class="box-title">
+    <tspan x="1190">Relation-aware chain retrieval</tspan>
+  </text>
+  <text x="1190" y="780" text-anchor="middle" class="box-sub">
+    <tspan x="1190">Bounded candidate generation</tspan>
+    <tspan x="1190" dy="34">+ relation-cue ranking</tspan>
+  </text>
+
+  <rect x="1440" y="675" width="350" height="180" rx="18" class="output-box"/>
+  <text x="1615" y="720" text-anchor="middle" class="box-title">
+    <tspan x="1615">Provenance-backed</tspan>
+    <tspan x="1615" dy="38">relation chain</tspan>
+  </text>
+  <text x="1615" y="812" text-anchor="middle" class="box-sub">
+    <tspan x="1615">Typed edges + source records</tspan>
+  </text>
+
+  <path d="M470 765 H520" class="arrow"/>
+  <path d="M900 765 H970" class="arrow"/>
+  <path d="M1410 765 H1440" class="arrow"/>
+
+  <rect x="1810" y="210" width="360" height="685" rx="20" class="output-box"/>
+  <text x="1990" y="245" text-anchor="middle" class="analyst-title">
+    <tspan x="1990">Evidence-backed</tspan>
+    <tspan x="1990" dy="34">analyst view</tspan>
+  </text>
+  <text x="1990" y="330" text-anchor="middle" class="analyst-sub">
+    <tspan x="1990">Regulatory and supply-chain</tspan>
+    <tspan x="1990" dy="28">analysis</tspan>
+  </text>
+  <rect x="1845" y="385" width="290" height="105" rx="12" class="top-box"/>
+  <text x="1990" y="430" text-anchor="middle" class="analyst-sub">
+    <tspan x="1990">Text evidence</tspan>
+    <tspan x="1990" dy="30">with citation</tspan>
+  </text>
+  <rect x="1845" y="620" width="290" height="105" rx="12" class="bottom-box"/>
+  <text x="1990" y="665" text-anchor="middle" class="analyst-sub">
+    <tspan x="1990">Relation-chain evidence</tspan>
+    <tspan x="1990" dy="30">with provenance</tspan>
+  </text>
+  <line x1="1845" y1="760" x2="2135" y2="760" class="guide"/>
+  <text x="1990" y="803" text-anchor="middle" class="analyst-note">
+    <tspan x="1990">Shown separately or together</tspan>
+    <tspan x="1990" dy="28">as needed</tspan>
+    <tspan x="1990" dy="28">Evaluated separately</tspan>
+  </text>
+
+  <path d="M1790 300 H1810" class="arrow"/>
+  <path d="M1790 765 H1810" class="arrow"/>
+
+</svg>

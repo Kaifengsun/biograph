@@ -21,7 +21,7 @@ The principal holdout, enrichment ablation, selective-reranking confirmation, do
 
 ## Figures
 
-Figures are intentionally deferred until the project group reviews the scientific narrative. The source compiles without missing figure files. Once the narrative is accepted, the next revision can add a corpus-and-retrieval workflow figure and one results figure without restructuring the text.
+The manuscript contains two full-width figures: a dual-path framework overview and a three-panel results summary. Editable SVG sources and publication PNG exports are stored in `figures/`. The PNGs are 2,200 pixels wide and exceed 300 dpi at the manuscript text width.
 
 ## Submission fields
 

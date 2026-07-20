@@ -25,7 +25,6 @@ BM25 found Gold within its top 50 for all 58 questions. Qwen3 reranking raised H
 
 MedCPT gave the opposite result. Full-corpus dual-encoder retrieval reached Hit@5 of 0.345, MRR of 0.300, and nDCG@5 of 0.246. MedCPT cross-encoding of BM25's top 50 preserved candidate recall but reduced the three metrics to 0.603, 0.457, and 0.431. All paired 95\% intervals against BM25 were below zero for these metrics. The pattern held across single-clause, table, document-structure, and cross-document slices.
 
-\clearpage
 \input{tables/final_validation}
 
 \subsection{Exploratory evidence-chain ranking}
@@ -35,3 +34,12 @@ Candidate generation contained the accepted chain for every question. On the 28 
 Performance varied sharply by task. R1 recovered all shortage chains within one candidate and reached Hit@5 of 0.900 on regulatory logic, but only 0.375 on the eight retained API-supply questions. The transparent 30-question analysis, which includes the two ambiguous questions, gave Hit@5 of 0.733 and MRR of 0.626. Twelve queries reached the deterministic 50,000-candidate cap, but none aborted or lacked an anchor.
 
 \input{tables/relation_chain_ranking}
+
+\Cref{fig:retrieval-findings} consolidates the principal text-retrieval boundary, graph-chain ablation, and task-specific failure pattern in a common Hit@5 view.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=\linewidth]{figures/retrieval_findings_summary.png}
+  \caption{Summary of source-chunk and evidence-chain retrieval results. (a) Hit@5 on 58 adjudicated text questions. Asterisks mark feedback-motivated post hoc extensions evaluated under subsequently locked, unchanged inference protocols after the Gold set had been observed; they are interpreted as boundary analyses. The 95\% paired-bootstrap interval for the Qwen3--BM25 Hit@5 difference included zero. The darker lavender fill identifies the primary BM25 baseline. (b) Exploratory exact-chain Hit@5 for the relation-aware method and its controls on the strict 28-question audit set. (c) Exploratory exact-chain Hit@5 for the complete relation-aware method by task. Two questions with non-unique frozen-graph paths were retained in the 30-question audit record but excluded from strict exact-chain evaluation. Values show proportions and exact hit counts.}
+  \label{fig:retrieval-findings}
+\end{figure}

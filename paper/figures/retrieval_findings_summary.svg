@@ -1,0 +1,176 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="930" viewBox="0 0 2200 930">
+  <defs>
+    <style>
+      .panel { fill: #ffffff; stroke: #b8bdc5; stroke-width: 2.5; }
+      .panel-label { font-family: Arial, Helvetica, sans-serif; font-size: 30px; font-weight: 700; fill: #15171a; }
+      .panel-title { font-family: "Times New Roman", Times, serif; font-size: 32px; fill: #15171a; }
+      .panel-sub { font-family: Arial, Helvetica, sans-serif; font-size: 20px; fill: #4b5159; }
+      .row-label { font-family: Arial, Helvetica, sans-serif; font-size: 21px; fill: #20242a; }
+      .value { font-family: Arial, Helvetica, sans-serif; font-size: 20px; font-weight: 700; fill: #15171a; }
+      .count { font-family: Arial, Helvetica, sans-serif; font-size: 16px; fill: #515861; }
+      .tick { font-family: Arial, Helvetica, sans-serif; font-size: 17px; fill: #59616b; }
+      .note { font-family: Arial, Helvetica, sans-serif; font-size: 18px; fill: #3f454d; }
+      .axis { stroke: #4a5058; stroke-width: 2; }
+      .grid { stroke: #d9dce1; stroke-width: 1.5; }
+      .bar { stroke: #252a31; stroke-width: 2; }
+      .lavender { fill: #e9ebf7; }
+      .lavender-strong { fill: #cbd0e9; }
+      .green { fill: #e6f1e9; }
+      .green-strong { fill: #bfd9c7; }
+      .neutral { fill: #f0f1f3; }
+      .separator { stroke: #9ca2aa; stroke-width: 1.5; stroke-dasharray: 7 7; }
+    </style>
+  </defs>
+
+  <rect width="2200" height="930" fill="#ffffff"/>
+
+  <!-- Panel A -->
+  <rect x="45" y="40" width="675" height="845" rx="18" class="panel"/>
+  <text x="75" y="95" class="panel-label">(a)</text>
+  <text x="130" y="95" class="panel-title">Text retrieval over source chunks</text>
+  <text x="130" y="130" class="panel-sub">58 adjudicated questions · Hit@5</text>
+
+  <line x1="330" y1="170" x2="330" y2="700" class="grid"/>
+  <line x1="412.5" y1="170" x2="412.5" y2="700" class="grid"/>
+  <line x1="495" y1="170" x2="495" y2="700" class="grid"/>
+  <line x1="577.5" y1="170" x2="577.5" y2="700" class="grid"/>
+  <line x1="660" y1="170" x2="660" y2="700" class="grid"/>
+
+  <text x="75" y="216" class="row-label">Qwen3 reranking</text>
+  <text x="75" y="239" class="row-label">over BM25*</text>
+  <rect x="330" y="198" width="324.4" height="38" rx="4" class="bar lavender"/>
+  <text x="665" y="216" class="value">0.983</text>
+  <text x="665" y="238" class="count">57/58</text>
+
+  <text x="75" y="308" class="row-label">Context-matched BM25</text>
+  <rect x="330" y="280" width="312.8" height="38" rx="4" class="bar lavender-strong"/>
+  <text x="653" y="298" class="value">0.948</text>
+  <text x="653" y="320" class="count">55/58</text>
+
+  <text x="75" y="390" class="row-label">Selective table gate</text>
+  <rect x="330" y="362" width="296.0" height="38" rx="4" class="bar lavender"/>
+  <text x="636" y="380" class="value">0.897</text>
+  <text x="636" y="402" class="count">52/58</text>
+
+  <text x="75" y="472" class="row-label">Youtu dense</text>
+  <rect x="330" y="444" width="250.5" height="38" rx="4" class="bar lavender"/>
+  <text x="591" y="462" class="value">0.759</text>
+  <text x="591" y="484" class="count">44/58</text>
+
+  <text x="75" y="544" class="row-label">MedCPT reranking</text>
+  <text x="75" y="567" class="row-label">over BM25*</text>
+  <rect x="330" y="526" width="199.0" height="38" rx="4" class="bar lavender"/>
+  <text x="539" y="544" class="value">0.603</text>
+  <text x="539" y="566" class="count">35/58</text>
+
+  <text x="75" y="626" class="row-label">MedCPT dense</text>
+  <text x="75" y="649" class="row-label">retrieval*</text>
+  <rect x="330" y="608" width="113.9" height="38" rx="4" class="bar lavender"/>
+  <text x="454" y="626" class="value">0.345</text>
+  <text x="454" y="648" class="count">20/58</text>
+
+  <line x1="330" y1="700" x2="660" y2="700" class="axis"/>
+  <text x="330" y="728" text-anchor="middle" class="tick">0</text>
+  <text x="412.5" y="728" text-anchor="middle" class="tick">0.25</text>
+  <text x="495" y="728" text-anchor="middle" class="tick">0.50</text>
+  <text x="577.5" y="728" text-anchor="middle" class="tick">0.75</text>
+  <text x="660" y="728" text-anchor="middle" class="tick">1.00</text>
+  <text x="75" y="780" class="note">Context-matched BM25 remained a strong default.</text>
+
+  <!-- Panel B -->
+  <rect x="762.5" y="40" width="675" height="845" rx="18" class="panel"/>
+  <text x="792.5" y="95" class="panel-label">(b)</text>
+  <text x="847.5" y="95" class="panel-title">Evidence-chain ablation</text>
+  <text x="847.5" y="130" class="panel-sub">Strict 28-question audit set · exact-chain Hit@5</text>
+
+  <line x1="1050" y1="170" x2="1050" y2="620" class="grid"/>
+  <line x1="1132.5" y1="170" x2="1132.5" y2="620" class="grid"/>
+  <line x1="1215" y1="170" x2="1215" y2="620" class="grid"/>
+  <line x1="1297.5" y1="170" x2="1297.5" y2="620" class="grid"/>
+  <line x1="1380" y1="170" x2="1380" y2="620" class="grid"/>
+
+  <text x="792.5" y="226" class="row-label">Relation-aware</text>
+  <rect x="1050" y="198" width="259.4" height="38" rx="4" class="bar green-strong"/>
+  <text x="1320" y="216" class="value">0.786</text>
+  <text x="1320" y="238" class="count">22/28</text>
+
+  <text x="792.5" y="308" class="row-label">Direction off</text>
+  <rect x="1050" y="280" width="247.5" height="38" rx="4" class="bar green"/>
+  <text x="1308" y="298" class="value">0.750</text>
+  <text x="1308" y="320" class="count">21/28</text>
+
+  <line x1="792.5" y1="345" x2="1405" y2="345" class="separator"/>
+
+  <text x="792.5" y="390" class="row-label">Untyped traversal</text>
+  <rect x="1050" y="362" width="59.1" height="38" rx="4" class="bar neutral"/>
+  <text x="1120" y="380" class="value">0.179</text>
+  <text x="1120" y="402" class="count">5/28</text>
+
+  <text x="792.5" y="472" class="row-label">Relation-blind</text>
+  <rect x="1050" y="444" width="47.2" height="38" rx="4" class="bar neutral"/>
+  <text x="1108" y="462" class="value">0.143</text>
+  <text x="1108" y="484" class="count">4/28</text>
+
+  <text x="792.5" y="554" class="row-label">Relation cues off</text>
+  <rect x="1050" y="526" width="47.2" height="38" rx="4" class="bar neutral"/>
+  <text x="1108" y="544" class="value">0.143</text>
+  <text x="1108" y="566" class="count">4/28</text>
+
+  <line x1="1050" y1="620" x2="1380" y2="620" class="axis"/>
+  <text x="1050" y="648" text-anchor="middle" class="tick">0</text>
+  <text x="1132.5" y="648" text-anchor="middle" class="tick">0.25</text>
+  <text x="1215" y="648" text-anchor="middle" class="tick">0.50</text>
+  <text x="1297.5" y="648" text-anchor="middle" class="tick">0.75</text>
+  <text x="1380" y="648" text-anchor="middle" class="tick">1.00</text>
+  <text x="792.5" y="720" class="note">Relation cues accounted for most</text>
+  <text x="792.5" y="750" class="note">of the measured graph-ranking gain.</text>
+  <text x="792.5" y="812" class="note">Direction removal had only a small</text>
+  <text x="792.5" y="840" class="note">point-estimate effect.</text>
+
+  <!-- Panel C -->
+  <rect x="1480" y="40" width="675" height="845" rx="18" class="panel"/>
+  <text x="1510" y="95" class="panel-label">(c)</text>
+  <text x="1565" y="95" class="panel-title">Relation-aware chain retrieval by task</text>
+  <text x="1565" y="130" class="panel-sub">Same strict 28-question audit set · exact-chain Hit@5</text>
+
+  <line x1="1770" y1="170" x2="1770" y2="540" class="grid"/>
+  <line x1="1852.5" y1="170" x2="1852.5" y2="540" class="grid"/>
+  <line x1="1935" y1="170" x2="1935" y2="540" class="grid"/>
+  <line x1="2017.5" y1="170" x2="2017.5" y2="540" class="grid"/>
+  <line x1="2100" y1="170" x2="2100" y2="540" class="grid"/>
+
+  <text x="1510" y="226" class="row-label">Overall</text>
+  <rect x="1770" y="198" width="259.4" height="38" rx="4" class="bar green-strong"/>
+  <text x="2040" y="216" class="value">0.786</text>
+  <text x="2040" y="238" class="count">22/28</text>
+
+  <line x1="1510" y1="265" x2="2125" y2="265" class="separator"/>
+
+  <text x="1510" y="324" class="row-label">Shortage chains</text>
+  <rect x="1770" y="296" width="330" height="38" rx="4" class="bar green"/>
+  <text x="2108" y="314" class="value">1.000</text>
+  <text x="2108" y="336" class="count">10/10</text>
+
+  <text x="1510" y="406" class="row-label">Regulatory logic</text>
+  <rect x="1770" y="378" width="297" height="38" rx="4" class="bar green"/>
+  <text x="2078" y="396" class="value">0.900</text>
+  <text x="2078" y="418" class="count">9/10</text>
+
+  <text x="1510" y="488" class="row-label">API supply</text>
+  <rect x="1770" y="460" width="123.8" height="38" rx="4" class="bar green"/>
+  <text x="1904" y="478" class="value">0.375</text>
+  <text x="1904" y="500" class="count">3/8</text>
+
+  <line x1="1770" y1="540" x2="2100" y2="540" class="axis"/>
+  <text x="1770" y="568" text-anchor="middle" class="tick">0</text>
+  <text x="1852.5" y="568" text-anchor="middle" class="tick">0.25</text>
+  <text x="1935" y="568" text-anchor="middle" class="tick">0.50</text>
+  <text x="2017.5" y="568" text-anchor="middle" class="tick">0.75</text>
+  <text x="2100" y="568" text-anchor="middle" class="tick">1.00</text>
+  <text x="1510" y="650" class="note">Performance was high for shortage</text>
+  <text x="1510" y="680" class="note">and regulatory-logic chains.</text>
+  <text x="1510" y="752" class="note">API-supply questions were the main</text>
+  <text x="1510" y="782" class="note">observed failure mode.</text>
+
+  <text x="1100" y="915" text-anchor="middle" class="tick">All bars report Hit@5; panels (b) and (c) use exact-chain Hit@5. Higher is better.</text>
+</svg>

@@ -2,7 +2,7 @@
 
 ## Scope
 
-The manuscript uses exactly two full-width figures. Figure 1 explains the dual-path auditable evidence framework. Figure 2 summarizes the main confirmed experimental findings. Both figures use the same restrained journal style: white background, dark neutral strokes, pale lavender for regulatory text evidence, and pale green for structured graph evidence. Meaning must remain recoverable in grayscale through labels, ordering, and outlines rather than color alone.
+The manuscript uses exactly two full-width figures. Figure 1 explains the dual-path auditable evidence framework. Figure 2 summarizes the main experimentally observed findings while preserving the exploratory status of the graph-chain analysis and post hoc neural extensions. Both figures use the same restrained journal style: white background, dark neutral strokes, pale lavender for regulatory text evidence, and pale green for structured graph evidence. Meaning must remain recoverable in grayscale through labels, ordering, and outlines rather than color alone.
 
 ## Figure 1: Dual-Path Framework
 
@@ -12,9 +12,9 @@ The manuscript uses exactly two full-width figures. Figure 1 explains the dual-p
 
 **Graph path.** Frozen openFDA shortage snapshot -> typed evidence graph -> bounded candidate generation and relation-cue ranking -> provenance-backed typed relation chain.
 
-**Boundary conditions.** The task specifies text, graph, or both. Source-grounded summaries and synthetic questions are generated from the document hierarchy and guide text retrieval only. Text and graph evidence may be displayed separately or together but are evaluated separately.
+**Boundary conditions.** The task specifies text, graph, or both. Source-grounded summaries and synthetic questions are optional retrieval aids evaluated from the document hierarchy; they are never returned as evidence. Text and graph evidence may be displayed separately or together but are evaluated separately.
 
-**Caption.** `Overview of the proposed dual-path auditable evidence retrieval framework. Analyst requests may invoke text retrieval, structured relation-chain retrieval, or both. Generated summaries and synthetic questions guide retrieval but never replace citable source passages, tables, or provenance-bearing graph records.`
+**Caption.** `Overview of the proposed dual-path auditable evidence retrieval framework. Analyst requests may invoke text retrieval, structured relation-chain retrieval, or both. Source-grounded summaries and synthetic questions were evaluated as optional retrieval aids but never treated as evidence; returned evidence remains a citable source passage, table, or provenance-bearing graph record.`
 
 **Placement.** At the end of Task Definition, immediately before Methods.
 
@@ -29,8 +29,8 @@ The manuscript uses exactly two full-width figures. Figure 1 explains the dual-p
 | Method | Hit@5 | Hits |
 |---|---:|---:|
 | Qwen3 reranking over BM25* | 0.983 | 57/58 |
-| BM25 | 0.948 | 55/58 |
-| Selective gate | 0.897 | 52/58 |
+| Context-matched BM25 | 0.948 | 55/58 |
+| Selective table gate | 0.897 | 52/58 |
 | Youtu dense | 0.759 | 44/58 |
 | MedCPT reranking over BM25* | 0.603 | 35/58 |
 | MedCPT dense retrieval* | 0.345 | 20/58 |
@@ -64,7 +64,7 @@ Same strict 28-question audit set, exact-chain Hit@5:
 
 All task slices use the same complete relation-aware method and therefore use the same green encoding. Low API-supply performance is conveyed by bar length, value, and annotation rather than a conflicting gray fill.
 
-**Caption.** `Summary of source-chunk and evidence-chain retrieval results. (a) Hit@5 on 58 adjudicated text questions. Asterisks mark feedback-motivated post hoc extensions evaluated under subsequently locked, unchanged inference protocols after the Gold set had been observed; they are interpreted as boundary analyses. The 95% paired-bootstrap interval for the Qwen3-BM25 Hit@5 difference included zero. The darker lavender fill identifies the primary BM25 baseline. (b) Exact-chain Hit@5 for the relation-aware method and its controls on the strict 28-question audit set. (c) Exact-chain Hit@5 for the complete relation-aware method by task. Two questions with non-unique frozen-graph paths were retained in the 30-question audit record but excluded from strict exact-chain evaluation. Values show proportions and exact hit counts.`
+**Caption.** `Summary of source-chunk and evidence-chain retrieval results. (a) Hit@5 on 58 adjudicated text questions. Asterisks mark feedback-motivated post hoc extensions evaluated under subsequently locked, unchanged inference protocols after the Gold set had been observed; they are interpreted as boundary analyses. The 95% paired-bootstrap interval for the Qwen3-BM25 Hit@5 difference included zero. The darker lavender fill identifies the primary BM25 baseline. (b) Exploratory exact-chain Hit@5 for the relation-aware method and its controls on the strict 28-question audit set. (c) Exploratory exact-chain Hit@5 for the complete relation-aware method by task. Two questions with non-unique frozen-graph paths were retained in the 30-question audit record but excluded from strict exact-chain evaluation. Values show proportions and exact hit counts.`
 
 **Placement.** After the graph-chain results at the end of Results.
 

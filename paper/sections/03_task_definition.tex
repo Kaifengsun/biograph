@@ -15,4 +15,11 @@ P_G(q)=\{p_1,p_2,\ldots\}, \qquad p_i=(v_1,e_1,v_2,\ldots,v_k),
 \end{equation}
 with edge direction and source metadata preserved. A path succeeds when an accepted node and edge sequence appears in the first $K$ candidates. Structured nodes never enter text Hit@$K$, reciprocal rank, or nDCG.
 
-The interface may display a passage and a path together, but their evidential roles remain explicit.
+The interface may display a passage and a path together, but their evidential roles remain explicit. \Cref{fig:dual-path} summarizes how an analyst request invokes text retrieval, structured relation-chain retrieval, or both while preserving this distinction.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=\linewidth]{figures/dual_path_framework.png}
+  \caption{Overview of the proposed dual-path auditable evidence retrieval framework. Analyst requests may invoke text retrieval, structured relation-chain retrieval, or both. Source-grounded summaries and synthetic questions were evaluated as optional retrieval aids but never treated as evidence; returned evidence remains a citable source passage, table, or provenance-bearing graph record.}
+  \label{fig:dual-path}
+\end{figure}

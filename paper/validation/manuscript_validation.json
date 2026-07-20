@@ -10,7 +10,9 @@
     "qwen3_called_supplementary": true,
     "qwen3_called_post_hoc": true,
     "no_qwen3_superiority_claim": true,
-    "figures_intentionally_deferred": true,
+    "required_figures_present": true,
+    "required_figure_sources_present": true,
+    "required_figures_referenced": true,
     "all_result_values_traceable": true
   },
   "result_checks": {
