@@ -1,0 +1,8 @@
+# Optional document-conversion, model-download, and presentation utilities.
+modelscope>=1.15
+PyMuPDF>=1.23
+pymupdf4llm>=0.0.10
+python-pptx>=0.6.23
+
+# MinerU is invoked through its external CLI and should be installed according
+# to the upstream instructions for the target CUDA or CPU environment.

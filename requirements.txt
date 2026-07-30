@@ -1,15 +1,14 @@
-# ============================================================
-#  制药供应链知识图谱 — 依赖包
-# ============================================================
-
-# 核心
-pandas>=2.0.0
-numpy>=1.24.0
-requests>=2.31.0
-
-# 可选：如果需要直接连接 Neo4j
-# neo4j>=5.0.0
-# py2neo>=2021.2.3
-
-# 旧版 A 股数据探索（可选）
-# akshare>=1.12.0
+# Core data, retrieval, graph, evaluation, and manuscript dependencies.
+numpy>=1.24
+pandas>=2.0
+requests>=2.31
+scipy>=1.10
+statsmodels>=0.14
+faiss-cpu>=1.8
+neo4j>=5.0
+sentence-transformers>=3.0
+openai>=1.0
+openpyxl>=3.1
+python-docx>=1.1
+lxml>=5.0
+matplotlib>=3.7

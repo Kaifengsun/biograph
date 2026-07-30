@@ -15,7 +15,7 @@ __pycache__/
 # JavaScript dependencies
 node_modules/
 
-# Local databases, downloaded corpora, and generated indexes
+# Local databases, downloaded corpora, models, and generated indexes
 neo4j_docker_data/
 models/
 data/
@@ -26,7 +26,7 @@ simulation_results/
 *.faiss
 *.index
 
-# Raw or redistributed literature and binary review artifacts
+# Raw literature and binary review artifacts
 文献/
 references/
 *.pdf
@@ -48,27 +48,33 @@ references/
 *.tar
 *.tar.gz
 
-# LaTeX build and local visual-QA artifacts
+# LaTeX and document-rendering outputs
 *.aux
 *.bbl
 *.blg
+*.fdb_latexmk
+*.fls
 *.synctex.gz
+paper/outputs/
+paper/build_unsrt/
 paper/validation/rendered_pages/
 
 # Local editor and agent state
 .vscode/
 .claude/
 .kiro/
+.superpowers/
+System.Collections.Hashtable.Dir/
 
-# Generated pipeline directories
+# Generated or separately maintained pipeline directories
 Neo_StandardExtracter/
 
-# Internal result exports that require a separate release review
+# Internal exports that require a separate release review
 agent_sim_results.json
 docs/*.csv
 charts/ChatGPT Image*
 
-# Internal handoff notes, scratch utilities, and superseded simulation work
+# Internal handoff notes, scratch utilities, and superseded experiments
 CODEX_RULES.md
 HANDOFF*.md
 TA_Tutorial_Notes.md
@@ -80,7 +86,7 @@ charts/
 research_proposal_EN.md
 研究计划*.md
 实验方案单独补充说明.md
-检索方法2.txt
+检索方法*.txt
 切分错误.txt
 
 # Superseded manuscript fragments may contain exploratory or synthetic numbers

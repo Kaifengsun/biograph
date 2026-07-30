@@ -1,35 +1,71 @@
 # BioGraph
 
-BioGraph is a research prototype for auditable retrieval across pharmaceutical regulatory text and structured drug-shortage facts. The project separates two evidence tasks:
+BioGraph is a research prototype for auditable retrieval across pharmaceutical
+regulatory text and structured drug-shortage facts. It deliberately separates
+two evidence tasks:
 
-1. locating source-grounded regulatory passages with text-first retrieval; and
-2. validating structured relationships among shortage records, products, NDCs, ingredients, manufacturers, and regulatory evidence.
+1. retrieving source-grounded regulatory passages and tables; and
+2. verifying structured relations among shortage events, NDC products, active
+   ingredients, manufacturers, and source records.
 
-The current empirical conclusion is deliberately conservative: BM25 is a strong default for regulatory source-passage retrieval, while hierarchical navigation and graph paths are complementary mechanisms for context traversal and structured fact verification. The repository does not claim general superiority over external GraphRAG systems.
+The current study treats BM25 as a strong text-retrieval default. Hierarchical
+navigation, neural reranking, and graph paths are evaluated as complementary
+mechanisms with distinct evidence roles. The repository does not claim that
+graph retrieval replaces source-text retrieval or that it outperforms general
+GraphRAG systems.
 
-## Repository contents
+## Repository map
 
-- `pharma_doc_pipeline/`: regulatory document processing
-- `pharma_graphrag/`: hierarchical and graph retrieval components
-- `pharma_supply_chain/`: structured supply-chain data processing
-- `tests/`: automated tests
-- `tools/`: review and experiment utilities
-- `sections/`: Chinese manuscript drafts
-- `docs/superpowers/specs/`: locked experiment and narrative design documents
+- `pharma_doc_pipeline/`: document conversion, hierarchical chunking,
+  enrichment, and vectorization.
+- `pharma_graphrag/`: text, hierarchy, and graph retrieval components.
+- `pharma_supply_chain/`: structured pharmaceutical data collection and graph
+  construction.
+- `tools/`: locked evaluation, annotation, adjudication, and audit utilities.
+- `tests/`: the intended automated test suite.
+- `paper/`: English LaTeX manuscript, figures, tables, bibliography, validation
+  checks, and Word-build utilities.
+- `docs/`: experiment protocols, design decisions, and reproducibility notes.
 
-Large indexes, local Neo4j databases, raw PDFs, review workbooks, API outputs, and machine-local logs are intentionally excluded from Git. A curated public data release and reproducibility package will be prepared separately after source licensing and privacy review.
+## Quick start
 
-## Environment
-
-Install the Python dependencies:
+Create an isolated Python environment, then install the core dependencies:
 
 ```powershell
 python -m pip install -r requirements.txt
 ```
 
-Set API configuration through environment variables. See `.env.example`; do not place real credentials in tracked files.
+Install optional conversion and model-download tools only when needed:
 
-## Research status
+```powershell
+python -m pip install -r requirements-optional.txt
+```
 
-The Chinese manuscript and experiments are under active revision. Results should be interpreted as domain-specific evidence about retrieval roles and boundaries, not as a cross-system SOTA benchmark.
+Configure API clients through user environment variables or an untracked
+`.env` file. Use `.env.example` as the template and never commit real keys.
 
+## Verification
+
+Run the intended test suite from the repository root:
+
+```powershell
+python -m pytest -q
+```
+
+Validate that manuscript claims still match the frozen result artifacts:
+
+```powershell
+python paper/scripts/validate_paper.py
+```
+
+Build instructions for the LaTeX and Word manuscripts are in
+`paper/README.md`. A task-oriented script map is available in
+`docs/SCRIPT_INDEX.md`.
+
+## Reproducibility boundary
+
+Large model weights, local Neo4j state, raw PDFs, copyrighted source material,
+review workbooks, API outputs, and machine-local logs are excluded from Git.
+Tracked protocols, lock files, evaluation code, aggregate results, paper
+assets, and validation checks document the reported experiments. See
+`docs/REPRODUCIBILITY.md` for the exact boundary and verification workflow.
