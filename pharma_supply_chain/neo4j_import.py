@@ -21,7 +21,7 @@ from . import config
 # ============================================================
 NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
 NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
-NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "Nb87891882")
+NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "")
 
 
 def load_csv(filepath):
@@ -32,6 +32,9 @@ def load_csv(filepath):
 
 def import_to_neo4j(clear_first=False):
     """将 CSV 导入 Neo4j"""
+    if not NEO4J_PASSWORD:
+        raise RuntimeError("NEO4J_PASSWORD is not set")
+
     print("╔" + "═" * 58 + "╗")
     print("║  制药供应链知识图谱 → Neo4j 导入工具                    ║")
     print("╚" + "═" * 58 + "╝")
@@ -144,7 +147,7 @@ def import_to_neo4j(clear_first=False):
     print(f"✅ 导入完成！耗时 {elapsed:.1f}s")
     print(f"   节点: {total_nodes} | 边: {total_edges}")
     print(f"\n🌐 打开 Neo4j Browser: http://localhost:7474")
-    print(f"   用户名: {NEO4J_USER}  密码: {NEO4J_PASSWORD}")
+    print(f"   用户名: {NEO4J_USER}")
     print(f"\n📝 试试这些 Cypher 查询:")
     print(f'   MATCH (n) RETURN labels(n)[0] AS type, count(*) ORDER BY count(*) DESC')
     print(f'   MATCH (d:Drug)-[:CONTAINS_API]->(a:API)-[:SUPPLIED_BY]->(m:Manufacturer) RETURN d,a,m LIMIT 50')

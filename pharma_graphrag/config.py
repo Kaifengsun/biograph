@@ -32,7 +32,7 @@ CHUNKS_DIR = DATA_DIR / "chunks"
 class Neo4jConfig:
     uri: str = "bolt://localhost:7687"
     user: str = "neo4j"
-    password: str = "Nb87891882"
+    password: str = field(default_factory=lambda: os.getenv("NEO4J_PASSWORD", ""))
 
 
 @dataclass
