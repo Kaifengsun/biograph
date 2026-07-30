@@ -1,7 +1,15 @@
 """快速验证 Neo4j 中的图谱数据"""
+import os
+
 from neo4j import GraphDatabase
 
-d = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "Nb87891882"))
+password = os.getenv("NEO4J_PASSWORD", "")
+if not password:
+    raise RuntimeError("NEO4J_PASSWORD is not set")
+d = GraphDatabase.driver(
+    os.getenv("NEO4J_URI", "bolt://localhost:7687"),
+    auth=(os.getenv("NEO4J_USER", "neo4j"), password),
+)
 with d.session() as s:
     # 节点统计
     r = s.run("MATCH (n) RETURN labels(n)[0] AS type, count(*) AS cnt ORDER BY cnt DESC")

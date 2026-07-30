@@ -1,5 +1,14 @@
+import os
+
 from neo4j import GraphDatabase
-d = GraphDatabase.driver('bolt://localhost:7687', auth=('neo4j','Nb87891882'))
+
+password = os.getenv("NEO4J_PASSWORD", "")
+if not password:
+    raise RuntimeError("NEO4J_PASSWORD is not set")
+d = GraphDatabase.driver(
+    os.getenv("NEO4J_URI", "bolt://localhost:7687"),
+    auth=(os.getenv("NEO4J_USER", "neo4j"), password),
+)
 with d.session() as s:
     # All unique doc_ids in DocChunk
     r3 = s.run('MATCH (n:DocChunk) RETURN DISTINCT n.doc_id ORDER BY n.doc_id').data()

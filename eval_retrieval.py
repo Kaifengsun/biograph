@@ -11,6 +11,7 @@ Usage:
 import json
 import argparse
 import math
+import os
 import time
 from pathlib import Path
 from typing import Optional
@@ -86,8 +87,12 @@ def retrieve_neo4j_bm25(query: str, k: int) -> list[str]:
     """BM25 full-text search via Neo4j fulltext index."""
     from neo4j import GraphDatabase
 
+    password = os.getenv("NEO4J_PASSWORD", "")
+    if not password:
+        raise RuntimeError("NEO4J_PASSWORD is not set")
     driver = GraphDatabase.driver(
-        "bolt://localhost:7687", auth=("neo4j", "Nb87891882")
+        os.getenv("NEO4J_URI", "bolt://localhost:7687"),
+        auth=(os.getenv("NEO4J_USER", "neo4j"), password),
     )
     try:
         with driver.session() as session:

@@ -9,8 +9,12 @@ def import_kg_to_neo4j(
     edges_csv: str = "output/pharma_kg_edges.csv",
     neo4j_uri: str = "bolt://localhost:7687",
     neo4j_user: str = "neo4j",
-    neo4j_pass: str = "Nb87891882"
+    neo4j_pass: str | None = None,
 ):
+    neo4j_pass = neo4j_pass or os.getenv("NEO4J_PASSWORD", "")
+    if not neo4j_pass:
+        raise RuntimeError("NEO4J_PASSWORD is not set")
+
     print("🚀 开始导入初始知识图谱 (KG)...")
     driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_pass))
     

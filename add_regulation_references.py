@@ -170,7 +170,8 @@ def main():
     print("  2. 将 output/patch_regulation_refs.cypher 复制到 Neo4j import 目录")
     print("     或直接在 Neo4j Browser 中粘贴执行")
     print("  3. 或使用 cypher-shell：")
-    print("     cat output/patch_regulation_refs.cypher | cypher-shell -u neo4j -p Nb87891882")
+    print('     cypher-shell -u neo4j -p "$NEO4J_PASSWORD" '
+          "-f output/patch_regulation_refs.cypher")
 
 
 if __name__ == "__main__":

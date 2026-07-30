@@ -42,8 +42,11 @@ import requests
 from neo4j import GraphDatabase
 
 # ── 配置 ───────────────────────────────────────────────────────
-NEO4J_URI      = "bolt://localhost:7687"
-NEO4J_AUTH     = ("neo4j", "Nb87891882")
+NEO4J_URI      = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+NEO4J_AUTH     = (
+    os.getenv("NEO4J_USER", "neo4j"),
+    os.getenv("NEO4J_PASSWORD", ""),
+)
 CHUNKS_DIR     = Path("data/chunks")
 CHECKPOINT_FILE = Path("data/pipeline_cache/qapairs_checkpoint.json")
 

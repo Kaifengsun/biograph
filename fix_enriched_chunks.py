@@ -21,12 +21,13 @@ FAISS 不动 (空向量不会被检索命中, 不影响效果)。
 
 import json
 import argparse
+import os
 from pathlib import Path
 from collections import defaultdict
 
-NEO4J_URI  = "bolt://localhost:7687"
-NEO4J_USER = "neo4j"
-NEO4J_PASS = "Nb87891882"
+NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
+NEO4J_PASS = os.getenv("NEO4J_PASSWORD", "")
 CHUNKS_DIR = Path("data/chunks")
 
 

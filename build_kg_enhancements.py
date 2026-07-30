@@ -24,11 +24,12 @@ build_kg_enhancements.py
 
 import json
 import argparse
+import os
 from pathlib import Path
 
-NEO4J_URI  = "bolt://localhost:7687"
-NEO4J_USER = "neo4j"
-NEO4J_PASS = "Nb87891882"
+NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
+NEO4J_PASS = os.getenv("NEO4J_PASSWORD", "")
 CHUNKS_DIR = Path("data/chunks")
 
 

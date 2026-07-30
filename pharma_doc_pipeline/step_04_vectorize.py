@@ -531,7 +531,7 @@ class EntityVectorizer:
 
 def link_chunks_to_neo4j(chunks_dir: Path = None,
                          neo4j_uri: str = "bolt://localhost:7687",
-                         neo4j_auth: Tuple = ("neo4j", "Nb87891882")):
+                         neo4j_auth: Tuple = None):
     """
     将文档 chunk 节点写入 Neo4j，并与现有 KG 实体建立链接。
     
@@ -542,6 +542,12 @@ def link_chunks_to_neo4j(chunks_dir: Path = None,
       - (DocChunk)-[:NEXT_CHUNK]->(DocChunk) 链表
     """
     from neo4j import GraphDatabase
+
+    if neo4j_auth is None:
+        password = os.getenv("NEO4J_PASSWORD", "")
+        if not password:
+            raise RuntimeError("NEO4J_PASSWORD is not set")
+        neo4j_auth = (os.getenv("NEO4J_USER", "neo4j"), password)
 
     chunks_dir = chunks_dir or CHUNKS_DIR
     enriched_files = sorted(chunks_dir.glob("*_enriched.json"))

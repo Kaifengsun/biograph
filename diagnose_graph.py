@@ -1,7 +1,15 @@
 """诊断图谱数据密度，找出需要补充的地方"""
+import os
+
 from neo4j import GraphDatabase
 
-d = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "Nb87891882"))
+password = os.getenv("NEO4J_PASSWORD", "")
+if not password:
+    raise RuntimeError("NEO4J_PASSWORD is not set")
+d = GraphDatabase.driver(
+    os.getenv("NEO4J_URI", "bolt://localhost:7687"),
+    auth=(os.getenv("NEO4J_USER", "neo4j"), password),
+)
 with d.session() as s:
 
     print("=" * 60)
