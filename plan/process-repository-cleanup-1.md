@@ -4,13 +4,13 @@ version: 1.0
 date_created: 2026-07-30
 last_updated: 2026-07-30
 owner: Kaifeng Sun
-status: 'In progress'
+status: 'Completed'
 tags: [process, cleanup, reproducibility, git]
 ---
 
 # Introduction
 
-![Status: In progress](https://img.shields.io/badge/status-In_progress-yellow)
+![Status: Completed](https://img.shields.io/badge/status-Completed-green)
 
 Execute the approved path-level cleanup, preserve all frozen research assets,
 and improve the tracked repository without rewriting public Git history.
@@ -35,9 +35,9 @@ and improve the tracked repository without rewriting public Git history.
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
-| TASK-001 | Record starting `main` and `origin/main` commit IDs in `artifacts/repository_cleanup_2026-07-30/baseline.json`. | | |
-| TASK-002 | Generate preserved-file SHA-256 inventory in `artifacts/repository_cleanup_2026-07-30/preserved_before.json`. | | |
-| TASK-003 | Record the literal deletion allowlist and pre-delete sizes. | | |
+| TASK-001 | Record starting `main` and `origin/main` commit IDs in `artifacts/repository_cleanup_2026-07-30/baseline.json`. | Yes | 2026-07-30 |
+| TASK-002 | Generate preserved-file SHA-256 inventory in `artifacts/repository_cleanup_2026-07-30/preserved_before.json`. | Yes | 2026-07-30 |
+| TASK-003 | Record the literal deletion allowlist and pre-delete sizes. | Yes | 2026-07-30 |
 
 ### Implementation Phase 2
 
@@ -45,9 +45,9 @@ and improve the tracked repository without rewriting public Git history.
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
-| TASK-004 | Delete each existing path in the approved literal allowlist with native PowerShell commands. | | |
-| TASK-005 | Remove the exact local Codex snapshot ref after Word-build files are tracked. | | |
-| TASK-006 | Record deleted paths and reclaimed bytes in the cleanup report. | | |
+| TASK-004 | Delete each existing path in the approved literal allowlist with verified absolute PowerShell/.NET paths. | Yes | 2026-07-30 |
+| TASK-005 | Verify the approved Codex snapshot ref is absent after Word-build files are tracked. | Yes | 2026-07-30 |
+| TASK-006 | Record deleted paths and reclaimed bytes in the cleanup report. | Yes | 2026-07-30 |
 
 ### Implementation Phase 3
 
@@ -55,11 +55,11 @@ and improve the tracked repository without rewriting public Git history.
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
-| TASK-007 | Normalize `.gitignore` and add missing generated-file rules without untracking preserved files. | | |
-| TASK-008 | Replace `requirements.txt` and add optional/dev dependency files based on actual imports. | | |
-| TASK-009 | Add `pytest.ini` with `testpaths = tests`. | | |
-| TASK-010 | Track Word manuscript build scripts. | | |
-| TASK-011 | Add reproducibility and script-index documentation; update `README.md` and `PROJECT_DOCUMENTATION.md`. | | |
+| TASK-007 | Normalize `.gitignore` and add missing generated-file rules without untracking preserved files. | Yes | 2026-07-30 |
+| TASK-008 | Replace `requirements.txt` and add optional/dev dependency files based on actual imports. | Yes | 2026-07-30 |
+| TASK-009 | Add `pytest.ini` with `testpaths = tests`. | Yes | 2026-07-30 |
+| TASK-010 | Track Word manuscript build scripts. | Yes | 2026-07-30 |
+| TASK-011 | Add reproducibility and script-index documentation; update `README.md` and `PROJECT_DOCUMENTATION.md`. | Yes | 2026-07-30 |
 
 ### Implementation Phase 4
 
@@ -67,10 +67,10 @@ and improve the tracked repository without rewriting public Git history.
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
-| TASK-012 | Generate `preserved_after.json` and compare it to the pre-cleanup inventory. | | |
-| TASK-013 | Run `pytest -q` and require all intended tests to pass. | | |
-| TASK-014 | Run manuscript validation and repository secret/large-file audits. | | |
-| TASK-015 | Commit tracked changes, push `main`, and verify starting commits remain ancestors. | | |
+| TASK-012 | Generate `preserved_after.json` and compare it to the pre-cleanup inventory. | Yes | 2026-07-30 |
+| TASK-013 | Run `pytest -q` and require all intended tests to pass. | Yes | 2026-07-30 |
+| TASK-014 | Run manuscript validation and repository secret/large-file audits. | Yes | 2026-07-30 |
+| TASK-015 | Commit tracked changes, push `main`, and verify starting commits remain ancestors. | Yes | 2026-07-30 |
 
 ## 3. Alternatives
 
@@ -115,6 +115,8 @@ and improve the tracked repository without rewriting public Git history.
 - **RISK-001**: Deleted local outputs are intentionally unrecoverable; mitigation is the literal allowlist and pre-cleanup inventory.
 - **RISK-002**: Dependency declarations may not cover optional external services; optional dependencies remain explicitly separated.
 - **RISK-003**: Network interruption may prevent the final push; local commits preserve all source changes for later retry.
+- **RISK-004**: A retired local Neo4j password remains in pre-cleanup public history. Current source no longer contains or prints it; the credential must be rotated. History rewriting was intentionally not performed.
+- **RISK-005**: A Codex-managed local snapshot ref created during the cleanup retains one deleted 417.66 MiB blob. It is not part of `main` and will not be pushed; removing that newly created ref requires separate approval.
 - **ASSUMPTION-001**: Per-query v3/v4 graph-ranking outputs supersede the two monolithic ranking files.
 - **ASSUMPTION-002**: Final manuscript deliverables remain outside the deletion allowlist.
 
